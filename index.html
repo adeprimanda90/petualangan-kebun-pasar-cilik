@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="theme-color" content="#38bdf8" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>Petualangan Kebun &amp; Pasar Cilik</title>
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+  <link rel="apple-touch-icon" href="./icon.svg" />
+  <link rel="stylesheet" href="./style.css?v=5" />
+</head>
+<body>
+  <!-- Scenery Background (GPU-accelerated CSS shapes) -->
+  <div class="scenery-bg" aria-hidden="true">
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
+    <div class="hill-back"></div>
+    <div class="hill-front"></div>
+  </div>
+
+  <!-- Main App Container (Locked Portrait 100dvh) -->
+  <main class="app-container" id="appRoot">
+    <!-- TOP BAR: Home Button, Star Counter, & Big Speaker Button (All >= 64x64px) -->
+    <header class="top-bar">
+      <button
+        id="btnHome"
+        class="clay-btn clay-btn-blue icon-btn-64"
+        aria-label="Kembali ke Halaman Utama"
+        title="Halaman Utama"
+      >
+        🏠
+      </button>
+
+      <div class="star-pill" id="starCounterPill" role="status" aria-label="Jumlah Bintang">
+        <span class="star-emoji">⭐</span>
+        <span id="starCountText">0</span>
+      </div>
+
+      <button
+        id="btnSpeaker"
+        class="clay-btn clay-btn-yellow icon-btn-64"
+        aria-label="Ulangi Instruksi Suara Bahasa Indonesia"
+        title="Ulangi Suara"
+      >
+        🔊
+      </button>
+    </header>
+
+    <!-- ====================================================================
+         SCREEN 1: HOME SCREEN (DUAL-MODE SELECTION + STICKER ALBUM 100)
+         ==================================================================== -->
+    <section id="screenHome" class="screen active" aria-label="Halaman Utama">
+      <div class="hero-banner">
+        <div class="hero-mascots" aria-hidden="true">
+          <span>🐰</span><span>🍎</span><span>🧺</span>
+        </div>
+        <h1 class="hero-title">Petualangan Kebun &amp; Pasar Cilik</h1>
+        <p class="hero-subtitle">Sentuh tombol untuk mulai bermain &amp; belajar!</p>
+      </div>
+
+      <div class="mode-cards-grid">
+        <!-- MODE A: KEBUN CERIA (USIA TK / 3-5 TAHUN) -->
+        <button id="btnModeKebun" class="clay-btn clay-btn-green mode-card-btn">
+          <div class="mode-icon-box" aria-hidden="true">
+            <svg viewBox="0 0 100 100" width="76" height="76">
+              <rect x="42" y="56" width="16" height="30" rx="5" fill="#92400e" />
+              <circle cx="50" cy="38" r="28" fill="#16a34a" />
+              <circle cx="34" cy="44" r="18" fill="#22c55e" />
+              <circle cx="66" cy="44" r="18" fill="#22c55e" />
+              <circle cx="50" cy="28" r="20" fill="#4ade80" />
+              <circle cx="38" cy="36" r="7" fill="#ef4444" stroke="#ffffff" stroke-width="1.5" />
+              <circle cx="62" cy="38" r="7" fill="#ef4444" stroke="#ffffff" stroke-width="1.5" />
+              <circle cx="50" cy="24" r="7" fill="#facc15" stroke="#ffffff" stroke-width="1.5" />
+              <path d="M28 74 H72 L66 92 H34 Z" fill="#f59e0b" stroke="#78350f" stroke-width="3" stroke-linejoin="round" />
+            </svg>
+          </div>
+          <div class="mode-card-info">
+            <span class="mode-badge">🌱 Usia TK (3 - 5 Tahun)</span>
+            <div class="mode-card-title">Kebun Ceria</div>
+            <div class="mode-card-desc">60 Buah &amp; Sayur: Warna, Hitung &amp; Huruf Awal</div>
+          </div>
+        </button>
+
+        <!-- MODE B: PASAR CILIK (USIA 6-7 TAHUN) -->
+        <button id="btnModePasar" class="clay-btn clay-btn-orange mode-card-btn">
+          <div class="mode-icon-box" aria-hidden="true">
+            <svg viewBox="0 0 100 100" width="76" height="76">
+              <rect x="16" y="52" width="68" height="36" rx="8" fill="#fb7185" stroke="#be123c" stroke-width="3" />
+              <path d="M12 22 H88 L92 40 H8 Z" fill="#ef4444" stroke="#991b1b" stroke-width="2.5" stroke-linejoin="round" />
+              <rect x="26" y="23" width="14" height="16" fill="#ffffff" />
+              <rect x="58" y="23" width="14" height="16" fill="#ffffff" />
+              <circle cx="36" cy="46" r="9" fill="#f97316" />
+              <circle cx="54" cy="46" r="9" fill="#22c55e" />
+              <circle cx="72" cy="68" r="14" fill="#facc15" stroke="#b45309" stroke-width="3" />
+              <text x="72" y="73" text-anchor="middle" font-size="14" font-weight="bold" fill="#78350f">5</text>
+            </svg>
+          </div>
+          <div class="mode-card-info">
+            <span class="mode-badge">🏫 Usia SD (6 - 7 Tahun)</span>
+            <div class="mode-card-title">Pasar Cilik</div>
+            <div class="mode-card-desc">Kereta 2-4 Suku Kata &amp; Kasir 5 Koin</div>
+          </div>
+        </button>
+      </div>
+
+      <div class="home-bottom-row">
+        <button id="btnOpenAlbum" class="clay-btn clay-btn-purple album-btn-wide">
+          <span>📒</span>
+          <span>Album Stiker (<span id="stickerCountBadge">1/100</span>)</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCREEN 2: MODE A - "KEBUN CERIA" (10 SOAL PER SET)
+         ==================================================================== -->
+    <section id="screenKebun" class="screen" aria-label="Mode Kebun Ceria">
+      <div class="mission-header">
+        <div class="mascot-avatar" id="kebunMascot">🐰</div>
+        <div class="mission-text-wrap">
+          <div class="mission-round-dots" id="kebunRoundDots">
+            <span class="round-dot"></span>
+            <span class="round-dot"></span>
+            <span class="round-dot"></span>
+            <span class="round-dot"></span>
+            <span class="round-dot"></span>
+            <span class="round-dot"></span>
+            <span class="round-dot"></span>
+            <span class="round-dot"></span>
+            <span class="round-dot"></span>
+            <span class="round-dot"></span>
+          </div>
+          <p class="mission-prompt" id="kebunPromptText">
+            Ayo petik buah ke dalam keranjang!
+          </p>
+        </div>
+      </div>
+
+      <div id="kebunDynamicStage" class="kebun-stage"></div>
+    </section>
+
+    <!-- ====================================================================
+         SCREEN 3: MODE B - "PASAR CILIK" (10 SOAL PER SET)
+         ==================================================================== -->
+    <section id="screenPasar" class="screen" aria-label="Mode Pasar Cilik">
+      <div class="mission-header">
+        <div class="mascot-avatar" id="pasarMascot">🦊</div>
+        <div class="mission-text-wrap">
+          <div class="mission-round-dots" id="pasarRoundDots">
+            <span class="round-dot"></span>
+            <span class="round-dot"></span>
+            <span class="round-dot"></span>
+            <span class="round-dot"></span>
+            <span class="round-dot"></span>
+            <span class="round-dot"></span>
+            <span class="round-dot"></span>
+            <span class="round-dot"></span>
+            <span class="round-dot"></span>
+            <span class="round-dot"></span>
+          </div>
+          <p class="mission-prompt" id="pasarPromptText">
+            Ayo susun suku kata dan belanja di pasar!
+          </p>
+        </div>
+      </div>
+
+      <div id="pasarDynamicStage" class="pasar-stage"></div>
+    </section>
+
+    <!-- ====================================================================
+         SCREEN 4: ALBUM STIKER KOLEKSI (100 STIKER)
+         ==================================================================== -->
+    <section id="screenAlbum" class="screen" aria-label="Album Stiker">
+      <div class="mission-header">
+        <div class="mascot-avatar">🌟</div>
+        <div class="mission-text-wrap">
+          <p class="mission-prompt">
+            Koleksi 100 Stiker! Ketuk stiker yang terbuka untuk mendengar suaranya.
+          </p>
+        </div>
+      </div>
+
+      <div id="albumGrid" class="album-grid"></div>
+    </section>
+  </main>
+
+  <!-- ======================================================================
+       REWARD MODAL (EVERY 10 COMPLETED MISSIONS) + CONFETTI
+       ====================================================================== -->
+  <div id="confettiContainer" class="confetti-container" aria-hidden="true"></div>
+
+  <div id="rewardModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="rewardTitle">
+    <div class="reward-modal-card">
+      <h2 id="rewardTitle" style="font-size: 1.55rem; color: #15803d; font-weight: 900;">
+        🎉 Hore! 10 Soal Selesai! 🎉
+      </h2>
+      <p id="rewardSubtitle" style="font-size: 1rem; font-weight: 800; color: #713f12;">
+        Kamu dapat +1 Bintang ⭐ dan Stiker Baru:
+      </p>
+      <div id="rewardStickerBox" class="reward-sticker-showcase">🍓</div>
+      <div id="rewardStickerName" style="font-size: 1.25rem; font-weight: 900; color: #b45309;">
+        Stroberi Manis
+      </div>
+      <button id="btnContinueGame" class="clay-btn clay-btn-green" style="width: 100%; font-size: 1.2rem; min-height: 68px;">
+        ▶️ Lanjut Bermain!
+      </button>
+    </div>
+  </div>
+
+  <script src="./app.js?v=5"></script>
+</body>
+</html>

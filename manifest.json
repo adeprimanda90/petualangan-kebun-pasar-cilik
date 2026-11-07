@@ -1,0 +1,20 @@
+{
+  "name": "Petualangan Kebun & Pasar Cilik",
+  "short_name": "Kebun & Pasar",
+  "description": "Game Edukasi Anak Usia TK & SD - Bermain Sambil Belajar 100% Offline",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#e0f2fe",
+  "theme_color": "#38bdf8",
+  "lang": "id-ID",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
