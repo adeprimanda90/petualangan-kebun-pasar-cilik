@@ -5,14 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="referrer" content="no-referrer" />
   <meta name="theme-color" content="#38bdf8" />
+  <!-- Meta Tag Khusus iOS (iPhone XR / Safari / Chrome Add to Home Screen Full-Screen) -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Kebun &amp; Pasar" />
   <meta name="mobile-web-app-capable" content="yes" />
   <title>Petualangan Kebun &amp; Pasar Cilik</title>
   <link rel="manifest" href="./manifest.json" />
   <link rel="icon" type="image/svg+xml" href="./icon.svg" />
   <link rel="apple-touch-icon" href="./icon.svg" />
-  <link rel="stylesheet" href="./style.css?v=5" />
+  <link rel="stylesheet" href="./style.css?v=6" />
 </head>
 <body>
   <!-- Scenery Background (GPU-accelerated CSS shapes) -->
@@ -23,9 +25,9 @@
     <div class="hill-front"></div>
   </div>
 
-  <!-- Main App Container (Locked Portrait 100dvh) -->
+  <!-- Main App Container (Locked Portrait 100dvh + iPhone XR Safe Area) -->
   <main class="app-container" id="appRoot">
-    <!-- TOP BAR: Home Button, Star Counter, & Big Speaker Button (All >= 64x64px) -->
+    <!-- TOP BAR: Home Button, Active Player Profile Chip, Star Counter, & Big Speaker Button -->
     <header class="top-bar">
       <button
         id="btnHome"
@@ -34,6 +36,17 @@
         title="Halaman Utama"
       >
         🏠
+      </button>
+
+      <!-- Tombol Profil Anak Aktif (Menampilkan Foto Profil Kepala + Nama) -->
+      <button
+        id="btnActiveProfile"
+        class="clay-btn profile-top-chip"
+        aria-label="Ganti Akun atau Ubah Foto Profil"
+        title="Ganti Akun Pemain"
+      >
+        <span class="profile-chip-avatar" id="topBarAvatarBox"></span>
+        <span class="profile-chip-name" id="topBarPlayerName">Anak</span>
       </button>
 
       <div class="star-pill" id="starCounterPill" role="status" aria-label="Jumlah Bintang">
@@ -52,15 +65,95 @@
     </header>
 
     <!-- ====================================================================
+         SCREEN 0: PILIH AKUN ANAK & TOMBOL MULAI (UNLOCK AUDIO/SPEECH iOS)
+         ==================================================================== -->
+    <section id="screenProfiles" class="screen active" aria-label="Pilih Akun Pemain">
+      <div class="hero-banner" style="padding: 10px 12px;">
+        <h1 class="hero-title" style="font-size: 1.3rem;">Siapa yang Bermain Hari Ini?</h1>
+        <p class="hero-subtitle">Pilih akunmu atau buat foto profil baru!</p>
+      </div>
+
+      <div id="profilesListContainer" class="profiles-list-grid"></div>
+
+      <div class="profiles-bottom-actions">
+        <button id="btnAddNewProfile" class="clay-btn clay-btn-blue" style="width: 100%; min-height: 60px; font-size: 1.05rem;">
+          ➕ Buat Akun Baru
+        </button>
+        <button id="btnStartWithSelectedProfile" class="clay-btn clay-btn-green" style="width: 100%; min-height: 68px; font-size: 1.25rem;">
+          ▶️ Mulai Bermain!
+        </button>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCREEN 0B: PEMBUAT AKUN & AVATAR KEPALA (LAKI-LAKI / PEREMPUAN)
+         ==================================================================== -->
+    <section id="screenAvatarCreator" class="screen" aria-label="Pembuat Akun dan Foto Profil">
+      <div class="creator-card clay-card">
+        <!-- Preview Foto Profil Kepala + Input Nama + Pilih Laki-laki/Perempuan -->
+        <div class="creator-top-row">
+          <div class="creator-avatar-preview" id="creatorAvatarPreviewBox"></div>
+          <div class="creator-identity-col">
+            <input
+              type="text"
+              id="inputProfileName"
+              class="creator-name-input"
+              placeholder="Ketik namamu..."
+              maxlength="14"
+              autocomplete="off"
+            />
+            <div class="gender-toggle-row">
+              <button type="button" id="btnGenderBoy" class="clay-btn gender-btn active">
+                👦 Laki-laki
+              </button>
+              <button type="button" id="btnGenderGirl" class="clay-btn gender-btn">
+                👧 Perempuan
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Kategori Kustomisasi Kepala (Rambut, Warna, Pakaian Leher, Aksesoris Kepala) -->
+        <div class="creator-tabs-row" id="creatorTabsRow">
+          <button type="button" class="clay-btn creator-tab-btn active" data-tab="hairStyle">
+            💇 Rambut
+          </button>
+          <button type="button" class="clay-btn creator-tab-btn" data-tab="hairColor">
+            🎨 Warna
+          </button>
+          <button type="button" class="clay-btn creator-tab-btn" data-tab="outfit">
+            👕 Pakaian
+          </button>
+          <button type="button" class="clay-btn creator-tab-btn" data-tab="accessory">
+            👑 Aksesoris
+          </button>
+        </div>
+
+        <!-- Pilihan Item Kustomisasi -->
+        <div class="creator-options-grid" id="creatorOptionsGrid"></div>
+
+        <!-- Tombol Simpan & Batal -->
+        <div class="creator-actions-row">
+          <button type="button" id="btnCancelCreator" class="clay-btn clay-btn-orange" style="min-height: 60px; flex: 1;">
+            ✖️ Batal
+          </button>
+          <button type="button" id="btnSaveProfile" class="clay-btn clay-btn-green" style="min-height: 60px; flex: 2; font-size: 1.1rem;">
+            ✅ Simpan Akun
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
          SCREEN 1: HOME SCREEN (DUAL-MODE SELECTION + STICKER ALBUM 100)
          ==================================================================== -->
-    <section id="screenHome" class="screen active" aria-label="Halaman Utama">
+    <section id="screenHome" class="screen" aria-label="Halaman Utama">
       <div class="hero-banner">
-        <div class="hero-mascots" aria-hidden="true">
-          <span>🐰</span><span>🍎</span><span>🧺</span>
+        <div class="hero-mascots" id="homeGreetingBanner" style="align-items: center; gap: 10px;">
+          <span id="homeAvatarHero" class="home-avatar-hero"></span>
         </div>
-        <h1 class="hero-title">Petualangan Kebun &amp; Pasar Cilik</h1>
-        <p class="hero-subtitle">Sentuh tombol untuk mulai bermain &amp; belajar!</p>
+        <h2 class="hero-title" id="homeWelcomeTitle">Petualangan Kebun &amp; Pasar Cilik</h2>
+        <p class="hero-subtitle" id="homeWelcomeSubtitle">Sentuh tombol untuk mulai bermain &amp; belajar!</p>
       </div>
 
       <div class="mode-cards-grid">
@@ -109,9 +202,12 @@
       </div>
 
       <div class="home-bottom-row">
+        <button id="btnEditCurrentAvatar" class="clay-btn clay-btn-blue" style="min-height: 64px; padding: 10px 14px; font-size: 0.95rem;">
+          🎨 Ubah Avatar
+        </button>
         <button id="btnOpenAlbum" class="clay-btn clay-btn-purple album-btn-wide">
           <span>📒</span>
-          <span>Album Stiker (<span id="stickerCountBadge">1/100</span>)</span>
+          <span>Stiker (<span id="stickerCountBadge">1/100</span>)</span>
         </button>
       </div>
     </section>
@@ -212,6 +308,6 @@
     </div>
   </div>
 
-  <script src="./app.js?v=5"></script>
+  <script src="./app.js?v=6"></script>
 </body>
 </html>

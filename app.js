@@ -1,8 +1,9 @@
 /* ==========================================================================
    PETUALANGAN KEBUN & PASAR CILIK - CORE GAME ENGINE (VANILLA JS)
-   - Ilustrasi SVG Asli & Akurat untuk Buah/Sayur Indonesia (Manggis, Nanas Madu,
-     Durian, Rambutan, Salak, Sawo, Pepaya, Belimbing, Jambu, Sirsak, dll.)
-   - Pelafalan Bahasa Indonesia Natural (Dual-Engine: Neural id-ID + Offline Web Speech)
+   - Optimasi Penuh iPhone XR (iOS Full-Screen + First-Touch Audio & Speech Unlock)
+   - Sistem Multi-Akun Anak + Pembuat Foto Profil Kepala (Laki-laki & Perempuan,
+     Gaya Rambut, Warna, Pakaian Leher, dan Aksesoris Kepala)
+   - Ilustrasi SVG Asli & Akurat untuk Buah/Sayur Indonesia
    - 10 Soal per Set Permainan, 60 Varian Buah/Sayur, 100 Koleksi Stiker
    ========================================================================== */
 
@@ -12,23 +13,272 @@
   const QUESTIONS_PER_SET = 10;
 
   // --------------------------------------------------------------------------
-  // 1. LOCK SCREEN INTERACTIONS (ANTI-SCROLL, ANTI-CONTEXT MENU, ANTI-ZOOM)
+  // 1. LOCK SCREEN INTERACTIONS (ALLOW SCROLL IN GRIDS & TEXT IN NAME INPUT)
   // --------------------------------------------------------------------------
-  window.addEventListener('contextmenu', (e) => e.preventDefault());
+  window.addEventListener('contextmenu', (e) => {
+    if (e.target.closest('#inputProfileName')) return;
+    e.preventDefault();
+  });
+
   document.addEventListener(
     'touchmove',
     (e) => {
-      if (e.target.closest('#albumGrid')) return;
+      if (
+        e.target.closest('#albumGrid') ||
+        e.target.closest('#profilesListContainer') ||
+        e.target.closest('#creatorOptionsGrid')
+      ) {
+        return;
+      }
       e.preventDefault();
     },
     { passive: false }
   );
 
   // --------------------------------------------------------------------------
-  // 2. ILUSTRASI SVG BUAH & SAYUR ASLI INDONESIA (100% AKURAT SESUAI BENTUK ASLI)
+  // 2. SISTEM PEMBUAT AVATAR KEPALA (HEAD PORTRAIT AVATAR GENERATOR)
+  // Hanya menampilkan bagian kepala & kerah pakaian atas untuk foto profil akun
+  // --------------------------------------------------------------------------
+  const AVATAR_HAIR_STYLES = [
+    { id: 'pendek_rapi', name: 'Pendek Rapi', icon: '👦' },
+    { id: 'jambul_ceria', name: 'Jambul Keren', icon: '⚡' },
+    { id: 'ikal_lucu', name: 'Rambut Ikal', icon: '☁️' },
+    { id: 'belah_tengah', name: 'Belah Tengah', icon: '✨' },
+    { id: 'poni_manis', name: 'Poni Panjang', icon: '👧' },
+    { id: 'kuncir_dua', name: 'Kuncir Dua', icon: '🎀' },
+    { id: 'kepang_dua', name: 'Kepang Dua', icon: '🌾' },
+    { id: 'bob_pendek', name: 'Bob Cantik', icon: '💇‍♀️' },
+    { id: 'hijab_ceria', name: 'Hijab Ceria', icon: '🧕' }
+  ];
+
+  const AVATAR_HAIR_COLORS = [
+    { id: 'hitam', name: 'Hitam Alami', hex: '#1e293b' },
+    { id: 'cokelat_tua', name: 'Cokelat Tua', hex: '#5c2d16' },
+    { id: 'cokelat_madu', name: 'Cokelat Madu', hex: '#b45309' },
+    { id: 'merah_marun', name: 'Merah Marun', hex: '#991b1b' },
+    { id: 'biru_ceria', name: 'Biru Ceria', hex: '#1d4ed8' },
+    { id: 'pink_manis', name: 'Merah Muda', hex: '#db2777' }
+  ];
+
+  const AVATAR_OUTFITS = [
+    { id: 'kaos_merah', name: 'Kaos Merah', primary: '#ef4444', secondary: '#fef08a' },
+    { id: 'kebun_denim', name: 'Baju Kebun', primary: '#2563eb', secondary: '#facc15' },
+    { id: 'kemeja_biru', name: 'Kemeja Biru', primary: '#0ea5e9', secondary: '#ffffff' },
+    { id: 'seragam_hijau', name: 'Baju Hijau', primary: '#16a34a', secondary: '#dcfce7' },
+    { id: 'pesta_ungu', name: 'Baju Ungu', primary: '#9333ea', secondary: '#fbcfe8' },
+    { id: 'pelaut_putih', name: 'Kerah Pelaut', primary: '#ffffff', secondary: '#1d4ed8' }
+  ];
+
+  const AVATAR_ACCESSORIES = [
+    { id: 'tanpa', name: 'Tanpa', icon: '❌' },
+    { id: 'topi_petani', name: 'Topi Kebun', icon: '👒' },
+    { id: 'mahkota', name: 'Mahkota', icon: '👑' },
+    { id: 'kacamata_bulat', name: 'Kacamata', icon: '👓' },
+    { id: 'kacamata_bintang', name: 'Bintang', icon: '🤩' },
+    { id: 'bando_kelinci', name: 'Kelinci', icon: '🐰' },
+    { id: 'pita_merah', name: 'Pita Merah', icon: '🎀' },
+    { id: 'topi_kasir', name: 'Topi Kasir', icon: '🧢' },
+    { id: 'bunga_telinga', name: 'Bunga', icon: '🌺' }
+  ];
+
+  function renderAvatarHeadSVG(avatar, sizePx = 64) {
+    const cfg = avatar || {
+      gender: 'boy',
+      hairStyle: 'pendek_rapi',
+      hairColor: 'hitam',
+      outfit: 'kaos_merah',
+      accessory: 'tanpa'
+    };
+
+    const hairColorObj =
+      AVATAR_HAIR_COLORS.find((c) => c.id === cfg.hairColor) || AVATAR_HAIR_COLORS[0];
+    const hColor = hairColorObj.hex;
+
+    const outfitObj = AVATAR_OUTFITS.find((o) => o.id === cfg.outfit) || AVATAR_OUTFITS[0];
+    const cPrimary = outfitObj.primary;
+    const cSecondary = outfitObj.secondary;
+
+    // 1. Layer Rambut Belakang (untuk rambut panjang / kuncir / kepang / hijab)
+    let backHairSVG = '';
+    if (cfg.hairStyle === 'poni_manis') {
+      backHairSVG = `<path d="M22 44 C18 62, 20 82, 28 88 L72 88 C80 82, 82 62, 78 44 Z" fill="${hColor}"/>`;
+    } else if (cfg.hairStyle === 'kuncir_dua') {
+      backHairSVG = `
+        <circle cx="15" cy="46" r="12" fill="${hColor}"/>
+        <circle cx="85" cy="46" r="12" fill="${hColor}"/>
+        <circle cx="22" cy="44" r="4" fill="#ef4444"/>
+        <circle cx="78" cy="44" r="4" fill="#ef4444"/>
+      `;
+    } else if (cfg.hairStyle === 'kepang_dua') {
+      backHairSVG = `
+        <ellipse cx="20" cy="64" rx="7" ry="16" fill="${hColor}"/>
+        <ellipse cx="80" cy="64" rx="7" ry="16" fill="${hColor}"/>
+        <circle cx="20" cy="76" r="4" fill="#facc15"/>
+        <circle cx="80" cy="76" r="4" fill="#facc15"/>
+      `;
+    } else if (cfg.hairStyle === 'bob_pendek') {
+      backHairSVG = `<path d="M20 42 C16 56, 20 72, 28 74 L72 74 C80 72, 84 56, 80 42 Z" fill="${hColor}"/>`;
+    } else if (cfg.hairStyle === 'hijab_ceria') {
+      backHairSVG = `<path d="M18 46 C16 68, 22 86, 50 90 C78 86, 84 68, 82 46 C80 22, 68 14, 50 14 C32 14, 20 22, 18 46 Z" fill="${hColor}"/>`;
+    }
+
+    // 2. Layer Pakaian Bahu Atas & Kerah Leher (Hanya tampil di bagian bawah foto profil kepala)
+    let outfitCollarSVG = `
+      <path d="M20 96 C22 76, 36 72, 50 72 C64 72, 78 76, 80 96 Z" fill="${cPrimary}" stroke="#1e293b" stroke-width="2"/>
+      <path d="M38 73 Q50 84 62 73" fill="none" stroke="${cSecondary}" stroke-width="4" stroke-linecap="round"/>
+    `;
+    if (cfg.outfit === 'kebun_denim') {
+      outfitCollarSVG = `
+        <path d="M20 96 C22 76, 36 72, 50 72 C64 72, 78 76, 80 96 Z" fill="${cSecondary}" stroke="#1e293b" stroke-width="2"/>
+        <path d="M28 96 L32 75 L40 75 L38 96 Z M72 96 L68 75 L60 75 L62 96 Z" fill="${cPrimary}"/>
+        <circle cx="35" cy="84" r="2.5" fill="#fde047"/>
+        <circle cx="65" cy="84" r="2.5" fill="#fde047"/>
+      `;
+    } else if (cfg.outfit === 'pesta_ungu') {
+      outfitCollarSVG = `
+        <path d="M20 96 C22 76, 36 72, 50 72 C64 72, 78 76, 80 96 Z" fill="${cPrimary}" stroke="#1e293b" stroke-width="2"/>
+        <polygon points="42,78 50,83 42,88" fill="#f43f5e"/>
+        <polygon points="58,78 50,83 58,88" fill="#f43f5e"/>
+        <circle cx="50" cy="83" r="3" fill="#fde047"/>
+      `;
+    } else if (cfg.outfit === 'pelaut_putih') {
+      outfitCollarSVG = `
+        <path d="M20 96 C22 76, 36 72, 50 72 C64 72, 78 76, 80 96 Z" fill="${cPrimary}" stroke="#1e293b" stroke-width="2"/>
+        <polygon points="34,74 50,90 66,74" fill="${cSecondary}"/>
+        <circle cx="50" cy="86" r="4" fill="#ef4444"/>
+      `;
+    }
+
+    // 3. Leher, Telinga, & Wajah Anak
+    const neckAndHeadSVG = `
+      <rect x="43" y="64" width="14" height="14" rx="5" fill="#fbbd8c"/>
+      <circle cx="23" cy="50" r="6" fill="#fbbd8c" stroke="#d97706" stroke-width="1.5"/>
+      <circle cx="77" cy="50" r="6" fill="#fbbd8c" stroke="#d97706" stroke-width="1.5"/>
+      <ellipse cx="50" cy="48" rx="25" ry="24" fill="#fed7aa" stroke="#d97706" stroke-width="2"/>
+    `;
+
+    // 4. Ekspresi Wajah (Laki-laki vs Perempuan)
+    const isGirl = cfg.gender === 'girl';
+    const faceFeaturesSVG = `
+      <!-- Pipi Merona Ceria -->
+      <ellipse cx="34" cy="54" rx="4.5" ry="2.8" fill="#fb7185" opacity="0.55"/>
+      <ellipse cx="66" cy="54" rx="4.5" ry="2.8" fill="#fb7185" opacity="0.55"/>
+      <!-- Alis -->
+      <path d="M35 39 Q39 36 43 39" fill="none" stroke="#451a03" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M57 39 Q61 36 65 39" fill="none" stroke="#451a03" stroke-width="2.2" stroke-linecap="round"/>
+      <!-- Bulu Mata Lembut untuk Perempuan -->
+      ${
+        isGirl
+          ? `<path d="M34 45 L31 42 M66 45 L69 42" stroke="#1e293b" stroke-width="2" stroke-linecap="round"/>`
+          : ''
+      }
+      <!-- Mata Berbinar -->
+      <circle cx="39" cy="46" r="3.8" fill="#1e293b"/>
+      <circle cx="61" cy="46" r="3.8" fill="#1e293b"/>
+      <circle cx="40.2" cy="44.8" r="1.3" fill="#ffffff"/>
+      <circle cx="62.2" cy="44.8" r="1.3" fill="#ffffff"/>
+      <!-- Hidung & Senyum Lebar -->
+      <ellipse cx="50" cy="50" rx="2" ry="1.5" fill="#ea580c" opacity="0.6"/>
+      <path d="M42 56 Q50 64 58 56" fill="none" stroke="#9a3412" stroke-width="2.6" stroke-linecap="round"/>
+    `;
+
+    // 5. Layer Rambut Depan / Atas Kepala
+    let frontHairSVG = '';
+    if (cfg.hairStyle === 'pendek_rapi') {
+      frontHairSVG = `<path d="M24 44 C24 24, 36 18, 50 18 C64 18, 76 24, 76 44 C70 32, 58 28, 44 32 C34 34, 28 38, 24 44 Z" fill="${hColor}"/>`;
+    } else if (cfg.hairStyle === 'jambul_ceria') {
+      frontHairSVG = `<path d="M24 44 C22 26, 36 20, 48 18 L44 10 L56 16 L62 8 L64 20 C74 24, 78 34, 76 44 C68 32, 34 32, 24 44 Z" fill="${hColor}"/>`;
+    } else if (cfg.hairStyle === 'ikal_lucu') {
+      frontHairSVG = `
+        <circle cx="30" cy="28" r="10" fill="${hColor}"/>
+        <circle cx="44" cy="22" r="11" fill="${hColor}"/>
+        <circle cx="58" cy="22" r="11" fill="${hColor}"/>
+        <circle cx="70" cy="28" r="10" fill="${hColor}"/>
+        <circle cx="25" cy="37" r="7" fill="${hColor}"/>
+        <circle cx="75" cy="37" r="7" fill="${hColor}"/>
+      `;
+    } else if (cfg.hairStyle === 'belah_tengah') {
+      frontHairSVG = `<path d="M24 46 C22 24, 36 18, 50 18 C64 18, 78 24, 76 46 C72 34, 56 32, 50 26 C44 32, 28 34, 24 46 Z" fill="${hColor}"/>`;
+    } else if (
+      cfg.hairStyle === 'poni_manis' ||
+      cfg.hairStyle === 'kuncir_dua' ||
+      cfg.hairStyle === 'kepang_dua' ||
+      cfg.hairStyle === 'bob_pendek'
+    ) {
+      frontHairSVG = `<path d="M24 44 C24 22, 36 17, 50 17 C64 17, 76 22, 76 44 C70 36, 62 34, 50 34 C38 34, 30 36, 24 44 Z" fill="${hColor}"/>`;
+    } else if (cfg.hairStyle === 'hijab_ceria') {
+      frontHairSVG = `
+        <path d="M22 48 C22 24, 34 18, 50 18 C66 18, 78 24, 78 48 C75 30, 64 26, 50 26 C36 26, 25 30, 22 48 Z" fill="${hColor}"/>
+        <path d="M22 48 C26 68, 38 76, 50 76 C62 76, 74 68, 78 48 C74 64, 64 70, 50 70 C36 70, 26 64, 22 48 Z" fill="${hColor}"/>
+      `;
+    }
+
+    // 6. Layer Aksesoris Kepala
+    let accessorySVG = '';
+    if (cfg.accessory === 'topi_petani') {
+      accessorySVG = `
+        <ellipse cx="50" cy="22" rx="36" ry="8" fill="#facc15" stroke="#b45309" stroke-width="2"/>
+        <path d="M28 22 C30 6, 70 6, 72 22 Z" fill="#fde047" stroke="#b45309" stroke-width="2"/>
+        <path d="M29 20 H71" stroke="#ef4444" stroke-width="3.5"/>
+      `;
+    } else if (cfg.accessory === 'mahkota') {
+      accessorySVG = `
+        <polygon points="30,24 34,8 43,17 50,5 57,17 66,8 70,24" fill="#fde047" stroke="#b45309" stroke-width="2" stroke-linejoin="round"/>
+        <circle cx="50" cy="17" r="2.5" fill="#ef4444"/>
+      `;
+    } else if (cfg.accessory === 'kacamata_bulat') {
+      accessorySVG = `
+        <circle cx="39" cy="46" r="8" fill="none" stroke="#ef4444" stroke-width="2.8"/>
+        <circle cx="61" cy="46" r="8" fill="none" stroke="#ef4444" stroke-width="2.8"/>
+        <line x1="47" y1="46" x2="53" y2="46" stroke="#ef4444" stroke-width="2.8"/>
+      `;
+    } else if (cfg.accessory === 'kacamata_bintang') {
+      accessorySVG = `
+        <polygon points="39,37 41,43 47,43 42,47 44,53 39,49 34,53 36,47 31,43 37,43" fill="rgba(250,204,21,0.35)" stroke="#ca8a04" stroke-width="2"/>
+        <polygon points="61,37 63,43 69,43 64,47 66,53 61,49 56,53 58,47 53,43 59,43" fill="rgba(250,204,21,0.35)" stroke="#ca8a04" stroke-width="2"/>
+        <line x1="46" y1="45" x2="54" y2="45" stroke="#ca8a04" stroke-width="2.5"/>
+      `;
+    } else if (cfg.accessory === 'bando_kelinci') {
+      accessorySVG = `
+        <ellipse cx="38" cy="12" rx="5" ry="12" transform="rotate(-12 38 12)" fill="#ffffff" stroke="#f472b6" stroke-width="2"/>
+        <ellipse cx="38" cy="13" rx="2.5" ry="7" transform="rotate(-12 38 13)" fill="#fbcfe8"/>
+        <ellipse cx="62" cy="12" rx="5" ry="12" transform="rotate(12 62 12)" fill="#ffffff" stroke="#f472b6" stroke-width="2"/>
+        <ellipse cx="62" cy="13" rx="2.5" ry="7" transform="rotate(12 62 13)" fill="#fbcfe8"/>
+      `;
+    } else if (cfg.accessory === 'pita_merah') {
+      accessorySVG = `
+        <polygon points="56,18 68,12 66,24" fill="#ef4444" stroke="#991b1b" stroke-width="1.5"/>
+        <polygon points="80,18 68,12 70,24" fill="#ef4444" stroke="#991b1b" stroke-width="1.5"/>
+        <circle cx="68" cy="18" r="3.5" fill="#fde047" stroke="#991b1b" stroke-width="1.5"/>
+      `;
+    } else if (cfg.accessory === 'topi_kasir') {
+      accessorySVG = `
+        <path d="M26 26 C26 12, 74 12, 74 26 Z" fill="#0ea5e9" stroke="#0369a1" stroke-width="2"/>
+        <ellipse cx="56" cy="26" rx="24" ry="5" fill="#0284c7"/>
+        <circle cx="50" cy="19" r="3.5" fill="#fde047"/>
+      `;
+    } else if (cfg.accessory === 'bunga_telinga') {
+      accessorySVG = `
+        <circle cx="24" cy="36" r="4" fill="#f43f5e"/><circle cx="30" cy="34" r="4" fill="#f43f5e"/>
+        <circle cx="30" cy="40" r="4" fill="#f43f5e"/><circle cx="24" cy="41" r="4" fill="#f43f5e"/>
+        <circle cx="27" cy="38" r="3" fill="#fde047"/>
+      `;
+    }
+
+    return `<svg viewBox="0 0 100 96" width="${sizePx}" height="${sizePx}" style="display:block;">
+      ${backHairSVG}
+      ${outfitCollarSVG}
+      ${neckAndHeadSVG}
+      ${faceFeaturesSVG}
+      ${frontHairSVG}
+      ${accessorySVG}
+    </svg>`;
+  }
+
+  // --------------------------------------------------------------------------
+  // 3. ILUSTRASI SVG BUAH & SAYUR ASLI INDONESIA (100% AKURAT SESUAI BENTUK ASLI)
   // --------------------------------------------------------------------------
   const SVG_ILLUSTRATIONS = {
-    // MANGGIS: Kulit ungu tua kemerahan, mahkota daun hijau 4 kelopak, & isi putih bersih beruas
     manggis: `<svg viewBox="0 0 80 80">
       <path d="M30 16 C22 10, 18 18, 28 22 C20 26, 28 32, 36 24 L40 12 L44 24 C52 32, 60 26, 52 22 C62 18, 58 10, 50 16 Z" fill="#16a34a" stroke="#14532d" stroke-width="2"/>
       <rect x="37" y="6" width="6" height="12" rx="3" fill="#15803d"/>
@@ -40,7 +290,6 @@
       <ellipse cx="48" cy="52" rx="6" ry="9" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
     </svg>`,
 
-    // NANAS MADU: Buah nanas kuning keemasan bersisik + mahkota daun hijau + potongan cincin nanas manis
     nanas_madu: `<svg viewBox="0 0 80 80">
       <path d="M36 24 L26 8 L38 16 L40 4 L44 16 L54 8 L46 24 Z" fill="#16a34a" stroke="#14532d" stroke-width="2" stroke-linejoin="round"/>
       <ellipse cx="38" cy="48" rx="18" ry="23" fill="#f59e0b" stroke="#b45309" stroke-width="2.5"/>
@@ -49,7 +298,6 @@
       <circle cx="58" cy="58" r="5" fill="#fef9c3" stroke="#f59e0b" stroke-width="1.5"/>
     </svg>`,
 
-    // DELIMA: Buah delima merah bermahkota dengan belahan biji-biji merah berkilau
     delima: `<svg viewBox="0 0 80 80">
       <path d="M32 18 L28 8 L36 13 L40 6 L44 13 L52 8 L48 18 Z" fill="#dc2626" stroke="#991b1b" stroke-width="2"/>
       <circle cx="40" cy="46" r="25" fill="#ef4444" stroke="#991b1b" stroke-width="2.5"/>
@@ -61,7 +309,6 @@
       <circle cx="37" cy="48" r="3" fill="#dc2626"/>
     </svg>`,
 
-    // RAMBUTAN: Buah merah berambut lengkung dengan kupasan daging putih
     rambutan: `<svg viewBox="0 0 80 80">
       <g stroke="#dc2626" stroke-width="2.5" stroke-linecap="round" fill="none">
         <path d="M22 24 Q12 16 16 12"/><path d="M32 18 Q28 8 34 6"/><path d="M46 18 Q52 8 56 12"/>
@@ -73,7 +320,6 @@
       <ellipse cx="44" cy="46" rx="5" ry="3" fill="#ffffff"/>
     </svg>`,
 
-    // JAMBU AIR MERAH: Bentuk lonceng khas jambu air merah mengilap
     jambu_merah: `<svg viewBox="0 0 80 80">
       <path d="M40 14 Q52 6 58 14 Q48 22 40 14 Z" fill="#22c55e" stroke="#15803d" stroke-width="2"/>
       <path d="M32 18 C28 18, 24 32, 16 52 C12 62, 22 68, 32 66 C36 64, 44 64, 48 66 C58 68, 68 62, 64 52 C56 32, 52 18, 48 18 Z" fill="#ef4444" stroke="#b91c1c" stroke-width="2.5"/>
@@ -81,7 +327,6 @@
       <ellipse cx="32" cy="36" rx="4" ry="10" fill="#ffffff" opacity="0.45" transform="rotate(-15 32 36)"/>
     </svg>`,
 
-    // JAMBU BIJI: Kulit hijau kekuningan dengan belahan daging merah muda berbiji
     jambu_biji: `<svg viewBox="0 0 80 80">
       <circle cx="32" cy="40" r="21" fill="#84cc16" stroke="#3f6212" stroke-width="2.5"/>
       <path d="M32 19 Q40 10 48 16 Q40 24 32 19 Z" fill="#16a34a"/>
@@ -91,7 +336,6 @@
       <circle cx="48" cy="52" r="1.8" fill="#fef08a"/><circle cx="53" cy="51" r="1.8" fill="#fef08a"/>
     </svg>`,
 
-    // BUAH NAGA: Kulit merah magenta bersisik hijau dengan belahan putih berbintik biji hitam
     buah_naga: `<svg viewBox="0 0 80 80">
       <path d="M22 24 Q14 14 24 18 M54 22 Q64 14 56 26 M16 44 Q8 38 18 36 M62 42 Q72 36 60 48" stroke="#22c55e" stroke-width="4" stroke-linecap="round" fill="none"/>
       <ellipse cx="36" cy="42" rx="20" ry="24" fill="#e11d48" stroke="#881337" stroke-width="2.5"/>
@@ -102,7 +346,6 @@
       <circle cx="56" cy="55" r="1.3" fill="#0f172a"/>
     </svg>`,
 
-    // LECI: Buah leci merah muda bertekstur bintil dengan daun hijau dan daging putih
     leci: `<svg viewBox="0 0 80 80">
       <path d="M26 16 Q42 8 56 18" stroke="#78350f" stroke-width="3" fill="none"/>
       <path d="M38 14 Q52 4 62 14 Q48 22 38 14 Z" fill="#16a34a"/>
@@ -111,14 +354,12 @@
       <ellipse cx="50" cy="52" rx="12" ry="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
     </svg>`,
 
-    // BELIMBING: Buah belimbing kuning berusuk dengan irisan berbentuk bintang 5 sudut
     belimbing: `<svg viewBox="0 0 80 80">
       <ellipse cx="34" cy="40" rx="22" ry="15" transform="rotate(-25 34 40)" fill="#facc15" stroke="#ca8a04" stroke-width="2.5"/>
       <polygon points="52,26 57,39 71,40 60,49 64,62 52,54 40,62 44,49 33,40 47,39" fill="#fde047" stroke="#ca8a04" stroke-width="2.5" stroke-linejoin="round"/>
       <circle cx="52" cy="46" r="3" fill="#a16207"/>
     </svg>`,
 
-    // DURIAN: Kulit durian berduri tajam terbuka memperlihatkan daging durian kuning emas
     durian: `<svg viewBox="0 0 80 80">
       <rect x="37" y="6" width="6" height="12" rx="2" fill="#78350f"/>
       <polygon points="40,14 48,20 56,15 58,25 68,24 64,34 72,40 64,48 70,56 60,60 58,70 48,66 40,72 32,66 22,70 20,60 10,56 16,48 8,40 16,34 12,24 22,25 24,15 32,20" fill="#84cc16" stroke="#3f6212" stroke-width="2.5" stroke-linejoin="round"/>
@@ -126,14 +367,12 @@
       <ellipse cx="49" cy="46" rx="9" ry="14" fill="#fde047" stroke="#ca8a04" stroke-width="2"/>
     </svg>`,
 
-    // NANGKA: Buah nangka besar bertekstur dengan potongan daging buah nangka kuning tebal
     nangka: `<svg viewBox="0 0 80 80">
       <ellipse cx="34" cy="42" rx="20" ry="25" fill="#a3e635" stroke="#4d7c0f" stroke-width="2.5"/>
       <ellipse cx="52" cy="50" rx="11" ry="15" fill="#facc15" stroke="#b45309" stroke-width="2.5"/>
       <ellipse cx="62" cy="54" rx="9" ry="13" fill="#fde047" stroke="#b45309" stroke-width="2"/>
     </svg>`,
 
-    // CEMPEDAK: Buah cempedak lonjong kuning kecokelatan terbuka berisi daging buah kuning tua
     cempedak: `<svg viewBox="0 0 80 80">
       <ellipse cx="40" cy="42" rx="18" ry="28" transform="rotate(-15 40 42)" fill="#ca8a04" stroke="#713f12" stroke-width="2.5"/>
       <ellipse cx="42" cy="44" rx="12" ry="20" transform="rotate(-15 42 44)" fill="#fef9c3"/>
@@ -141,7 +380,6 @@
       <circle cx="38" cy="50" r="6" fill="#f59e0b"/><circle cx="45" cy="54" r="5.5" fill="#facc15"/>
     </svg>`,
 
-    // DUKU: Dompolan buah duku bulat kuning kecokelatan di tangkai dengan satu buah terkupas
     duku: `<svg viewBox="0 0 80 80">
       <path d="M20 18 Q40 12 60 22" stroke="#78350f" stroke-width="3.5" fill="none" stroke-linecap="round"/>
       <circle cx="26" cy="36" r="13" fill="#fde68a" stroke="#b45309" stroke-width="2"/>
@@ -151,14 +389,12 @@
       <circle cx="56" cy="54" r="9" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
     </svg>`,
 
-    // KELAPA HIJAU: Buah kelapa muda hijau utuh dengan bagian atas terkupas putih segar
     kelapa: `<svg viewBox="0 0 80 80">
       <ellipse cx="40" cy="46" rx="24" ry="24" fill="#22c55e" stroke="#15803d" stroke-width="2.5"/>
       <polygon points="22,30 40,18 58,30 52,36 28,36" fill="#f8fafc" stroke="#15803d" stroke-width="2"/>
       <ellipse cx="40" cy="30" rx="9" ry="4" fill="#bae6fd" stroke="#94a3b8" stroke-width="1.5"/>
     </svg>`,
 
-    // SAWI HIJAU: Batang sawi pakcoy putih kehijauan dengan daun hijau lebar segar
     sawi_hijau: `<svg viewBox="0 0 80 80">
       <ellipse cx="30" cy="32" rx="16" ry="20" transform="rotate(-18 30 32)" fill="#16a34a" stroke="#14532d" stroke-width="2"/>
       <ellipse cx="50" cy="32" rx="16" ry="20" transform="rotate(18 50 32)" fill="#22c55e" stroke="#14532d" stroke-width="2"/>
@@ -166,7 +402,6 @@
       <path d="M28 44 Q32 68 40 70 Q48 68 52 44 L44 38 L36 38 Z" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
     </svg>`,
 
-    // KACANG HIJAU: Polong hijau dan butiran biji kacang hijau bulat dengan titik putih
     kacang_hijau: `<svg viewBox="0 0 80 80">
       <path d="M16 40 Q38 18 64 28 Q46 50 16 40 Z" fill="#16a34a" stroke="#14532d" stroke-width="2.5"/>
       <circle cx="28" cy="56" r="10" fill="#22c55e" stroke="#14532d" stroke-width="2"/>
@@ -177,7 +412,6 @@
       <ellipse cx="62" cy="46" rx="2.5" ry="1.3" fill="#ffffff"/>
     </svg>`,
 
-    // SIRSAK: Buah sirsak hijau berduri lunak dengan belahan daging putih dan biji hitam
     sirsak: `<svg viewBox="0 0 80 80">
       <path d="M40 14 C22 14, 16 34, 24 54 C30 68, 40 72, 46 66 C58 56, 62 34, 54 20 C50 14, 44 14, 40 14 Z" fill="#16a34a" stroke="#14532d" stroke-width="2.5"/>
       <ellipse cx="48" cy="52" rx="15" ry="14" fill="#ffffff" stroke="#15803d" stroke-width="2"/>
@@ -185,7 +419,6 @@
       <circle cx="49" cy="56" r="2.2" fill="#1e293b"/>
     </svg>`,
 
-    // KEDONDONG: Buah kedondong lonjong hijau segar di tangkai beserta belahan bijinya
     kedondong: `<svg viewBox="0 0 80 80">
       <path d="M24 14 Q42 10 56 20" stroke="#78350f" stroke-width="3" fill="none"/>
       <ellipse cx="30" cy="44" rx="15" ry="20" fill="#65a30d" stroke="#365314" stroke-width="2.5"/>
@@ -194,7 +427,6 @@
       <circle cx="52" cy="48" r="5" fill="#eab308"/>
     </svg>`,
 
-    // SRIKAYA: Buah srikaya hijau berbenjol-benjol khas dengan belahan putih manis
     srikaya: `<svg viewBox="0 0 80 80">
       <circle cx="30" cy="32" r="9" fill="#22c55e" stroke="#14532d" stroke-width="2"/>
       <circle cx="42" cy="28" r="9" fill="#4ade80" stroke="#14532d" stroke-width="2"/>
@@ -207,13 +439,11 @@
       <circle cx="44" cy="56" r="2.2" fill="#1e293b"/><circle cx="52" cy="56" r="2.2" fill="#1e293b"/>
     </svg>`,
 
-    // PARE HIJAU: Sayur pare hijau memanjang dengan tekstur bergelombang khas
     pare_hijau: `<svg viewBox="0 0 80 80">
       <path d="M16 56 C12 48, 28 20, 58 16 C66 16, 68 26, 56 42 C42 58, 22 66, 16 56 Z" fill="#22c55e" stroke="#14532d" stroke-width="2.5"/>
       <path d="M24 50 Q36 36 54 24 M28 54 Q42 42 58 30" stroke="#86efac" stroke-width="3" stroke-dasharray="4 4" fill="none" stroke-linecap="round"/>
     </svg>`,
 
-    // PEPAYA: Buah pepaya belah memanjang dengan daging oranye kemerahan & biji hitam di tengah
     pepaya: `<svg viewBox="0 0 80 80">
       <path d="M26 12 C16 24, 14 56, 30 68 C46 74, 64 56, 58 30 C54 16, 36 8, 26 12 Z" fill="#16a34a" stroke="#14532d" stroke-width="2.5"/>
       <path d="M29 17 C21 27, 19 53, 32 63 C44 68, 59 53, 54 32 C50 20, 37 14, 29 17 Z" fill="#f97316"/>
@@ -223,7 +453,6 @@
       <circle cx="38" cy="50" r="2.3" fill="#1e293b"/>
     </svg>`,
 
-    // LABU: Buah labu oranye bulat berusuk (tanpa wajah seram Halloween)
     labu: `<svg viewBox="0 0 80 80">
       <path d="M38 18 Q42 6 50 10" stroke="#15803d" stroke-width="5" fill="none" stroke-linecap="round"/>
       <ellipse cx="26" cy="46" rx="14" ry="21" fill="#ea580c" stroke="#9a3412" stroke-width="2"/>
@@ -231,14 +460,12 @@
       <ellipse cx="40" cy="46" rx="16" ry="22" fill="#f97316" stroke="#9a3412" stroke-width="2"/>
     </svg>`,
 
-    // KESEMEK: Buah kesemek oranye bulat pipih dengan kelopak daun hijau di atasnya
     kesemek: `<svg viewBox="0 0 80 80">
       <ellipse cx="40" cy="48" rx="25" ry="20" fill="#f97316" stroke="#c2410c" stroke-width="2.5"/>
       <path d="M24 28 Q40 22 56 28 Q46 38 40 34 Q34 38 24 28 Z" fill="#16a34a" stroke="#14532d" stroke-width="2"/>
       <ellipse cx="30" cy="42" rx="6" ry="3" fill="#ffffff" opacity="0.45" transform="rotate(-20 30 42)"/>
     </svg>`,
 
-    // MARKISA: Buah markisa terbelah memperlihatkan bulir-bulir oranye keemasan segar
     markisa: `<svg viewBox="0 0 80 80">
       <circle cx="40" cy="44" r="24" fill="#d97706" stroke="#78350f" stroke-width="2.5"/>
       <circle cx="40" cy="44" r="19" fill="#fef3c7"/>
@@ -248,21 +475,18 @@
       <circle cx="34" cy="45" r="2" fill="#451a03"/>
     </svg>`,
 
-    // APRIKOT: Buah aprikot oranye dengan belahan biji cokelat di tengah
     aprikot: `<svg viewBox="0 0 80 80">
       <circle cx="30" cy="42" r="18" fill="#fb923c" stroke="#c2410c" stroke-width="2.5"/>
       <circle cx="50" cy="48" r="18" fill="#fdba74" stroke="#c2410c" stroke-width="2.5"/>
       <ellipse cx="50" cy="48" rx="7" ry="9" fill="#78350f"/>
     </svg>`,
 
-    // JERUK KEPROK: Jeruk oranye dengan juring-juring buah jeruk yang sudah dikupas
     jeruk_bali: `<svg viewBox="0 0 80 80">
       <circle cx="34" cy="42" r="20" fill="#f97316" stroke="#c2410c" stroke-width="2.5"/>
       <path d="M44 38 C56 32, 66 44, 58 58 C50 66, 38 58, 44 38 Z" fill="#fb923c" stroke="#ea580c" stroke-width="2"/>
       <path d="M36 46 C48 40, 58 52, 50 64 C42 70, 30 62, 36 46 Z" fill="#fdba74" stroke="#ea580c" stroke-width="2"/>
     </svg>`,
 
-    // JERUK MANIS: Buah jeruk utuh berdaun dengan irisan bundar juring jeruk segar
     jeruk_manis: `<svg viewBox="0 0 80 80">
       <circle cx="32" cy="40" r="19" fill="#f97316" stroke="#c2410c" stroke-width="2.5"/>
       <path d="M32 20 Q42 12 48 18 Q40 26 32 20 Z" fill="#16a34a"/>
@@ -271,27 +495,23 @@
       <path d="M52 39 V65 M39 52 H65 M43 43 L61 61 M61 43 L43 61" stroke="#fef9c3" stroke-width="2"/>
     </svg>`,
 
-    // BAWANG MERAH: Dua siung bawang merah keunguan lengkap dengan garis kulit & akar
     bawang_merah: `<svg viewBox="0 0 80 80">
       <path d="M28 16 C16 32, 14 54, 28 62 C42 54, 40 32, 28 16 Z" fill="#a21caf" stroke="#701a75" stroke-width="2.5"/>
       <path d="M50 20 C38 36, 36 56, 50 64 C64 56, 62 36, 50 20 Z" fill="#c026d3" stroke="#701a75" stroke-width="2.5"/>
       <path d="M24 62 L22 68 M28 62 L28 70 M32 62 L34 68 M46 64 L44 70 M50 64 L50 72 M54 64 L56 70" stroke="#78350f" stroke-width="2"/>
     </svg>`,
 
-    // UBI UNGU: Umbi ubi ungu lonjong dengan irisan bundar berwarna ungu pekat
     ubi_ungu: `<svg viewBox="0 0 80 80">
       <path d="M16 52 C14 38, 36 18, 58 20 C64 24, 54 48, 32 58 C22 62, 18 58, 16 52 Z" fill="#7e22ce" stroke="#4c1d95" stroke-width="2.5"/>
       <circle cx="54" cy="54" r="14" fill="#f3e8ff" stroke="#6b21a8" stroke-width="2.5"/>
       <circle cx="54" cy="54" r="10" fill="#9333ea"/>
     </svg>`,
 
-    // KOL UNGU: Kubis/kol bulat berlapis warna ungu magenta dengan urat daun putih
     ketan_hitam: `<svg viewBox="0 0 80 80">
       <circle cx="40" cy="44" r="24" fill="#9333ea" stroke="#581c87" stroke-width="2.5"/>
       <path d="M22 34 Q40 48 58 34 M20 48 Q40 60 60 48 M40 20 V68" stroke="#f3e8ff" stroke-width="3" fill="none" stroke-linecap="round"/>
     </svg>`,
 
-    // BUAH BUNI: Dompolan buah buni bulat ungu kemerahan di tangkai berdaun hijau
     buni: `<svg viewBox="0 0 80 80">
       <path d="M24 18 Q42 14 56 24" stroke="#15803d" stroke-width="3.5" fill="none" stroke-linecap="round"/>
       <circle cx="28" cy="36" r="10" fill="#7e22ce" stroke="#3b0764" stroke-width="2"/>
@@ -301,14 +521,12 @@
       <circle cx="42" cy="60" r="10" fill="#581c87" stroke="#3b0764" stroke-width="2"/>
     </svg>`,
 
-    // SALAK: Buah salak cokelat bersisik meruncing ke atas beserta daging buah salak putih kekuningan
     salak: `<svg viewBox="0 0 80 80">
       <path d="M36 12 C22 28, 16 48, 24 60 C32 68, 44 68, 52 60 C60 48, 50 28, 36 12 Z" fill="#9a3412" stroke="#431407" stroke-width="2.5"/>
       <path d="M24 38 L46 54 M22 48 L40 62 M28 28 L50 44 M46 38 L24 54 M50 28 L28 44" stroke="#fed7aa" stroke-width="1.5" opacity="0.55"/>
       <ellipse cx="56" cy="54" rx="12" ry="10" fill="#fef9c3" stroke="#ca8a04" stroke-width="2"/>
     </svg>`,
 
-    // SAWO: Buah sawo lonjong cokelat muda dengan belahan daging cokelat manis & biji hitam mengilap
     sawo: `<svg viewBox="0 0 80 80">
       <ellipse cx="30" cy="42" rx="17" ry="21" fill="#b45309" stroke="#78350f" stroke-width="2.5"/>
       <ellipse cx="50" cy="48" rx="17" ry="20" fill="#d97706" stroke="#78350f" stroke-width="2.5"/>
@@ -316,7 +534,6 @@
       <ellipse cx="53" cy="48" rx="2.5" ry="6" fill="#0f172a"/>
     </svg>`,
 
-    // KURMA: Tiga buah kurma lonjong cokelat tua manis berkilau
     kurma: `<svg viewBox="0 0 80 80">
       <ellipse cx="28" cy="42" rx="11" ry="18" transform="rotate(-15 28 42)" fill="#78350f" stroke="#451a03" stroke-width="2"/>
       <ellipse cx="48" cy="38" rx="11" ry="18" transform="rotate(12 48 38)" fill="#92400e" stroke="#451a03" stroke-width="2"/>
@@ -324,7 +541,6 @@
       <ellipse cx="38" cy="51" rx="8" ry="2.5" fill="#d97706" opacity="0.6"/>
     </svg>`,
 
-    // BENGKUANG: Umbi bengkuang membulat cokelat krem dengan irisan putih renyah
     bengkuang: `<svg viewBox="0 0 80 80">
       <path d="M40 12 V24" stroke="#15803d" stroke-width="4" stroke-linecap="round"/>
       <path d="M40 22 C18 22, 14 44, 28 56 C36 62, 40 68, 40 72 C40 68, 44 62, 52 56 C66 44, 62 22, 40 22 Z" fill="#fde68a" stroke="#b45309" stroke-width="2.5"/>
@@ -344,7 +560,7 @@
   }
 
   // --------------------------------------------------------------------------
-  // 3. PEMETAAN FONETIK SUKU KATA BAHASA INDONESIA (ANTI-SINGKATAN TTS)
+  // 4. PEMETAAN FONETIK SUKU KATA BAHASA INDONESIA (ANTI-SINGKATAN TTS)
   // --------------------------------------------------------------------------
   const SYLLABLE_PHONETICS_ID = {
     A: 'aa',
@@ -459,7 +675,7 @@
   }
 
   // --------------------------------------------------------------------------
-  // 4. BANK 60 VARIAN BUAH, SAYUR & TANAMAN KEBUN (2, 3, HINGGA 4 SUKU KATA)
+  // 5. BANK 60 VARIAN BUAH, SAYUR & TANAMAN KEBUN (2, 3, HINGGA 4 SUKU KATA)
   // --------------------------------------------------------------------------
   const VOCAB_BANK = [
     // --- WARNA MERAH (12 Varian Berbeda) ---
@@ -535,7 +751,6 @@
     item('bengkuang', 'Bengkuang', '🥔', 'COKELAT', '#b45309', ['BENG', 'KU', 'ANG'])
   ];
 
-  // Bank Suku Kata Pengecoh (Distractor) untuk Kereta Suku Kata agar total minimal 6 pilihan
   const DISTRACTOR_SYLLABLES = [
     { text: 'BO', spoken: 'boo' },
     { text: 'LU', spoken: 'luu' },
@@ -560,7 +775,7 @@
   ];
 
   // --------------------------------------------------------------------------
-  // 5. KOLEKSI 100 STIKER BERSUARA BAHASA INDONESIA YANG BAIK DAN BENAR
+  // 6. KOLEKSI 100 STIKER BERSUARA BAHASA INDONESIA YANG BAIK DAN BENAR
   // --------------------------------------------------------------------------
   const EXTRA_40_STICKERS = [
     { id: 'st_kelinci', name: 'Kelinci Ceria', emoji: '🐰', voice: 'Halo teman kecil, aku Kelinci Ceria yang gemar makan sayur wortel.' },
@@ -605,7 +820,6 @@
     { id: 'st_piala', name: 'Piala Juara', emoji: '🏆', voice: 'Selamat ya, kamu adalah anak cerdas juara Petualangan Kebun dan Pasar Cilik.' }
   ];
 
-  // Gabungkan 40 Stiker Sahabat Kebun + 60 Stiker Buah/Sayur = 100 Stiker!
   const STICKER_COLLECTION = [
     ...EXTRA_40_STICKERS,
     ...VOCAB_BANK.map((v) => ({
@@ -636,9 +850,13 @@
   ];
 
   // --------------------------------------------------------------------------
-  // 6. WEB AUDIO SYNTHESIZER (EFEK SUARA POP, MELODI HORE, & BOING LEMBUT)
+  // 7. WEB AUDIO SYNTHESIZER & iOS FIRST-TOUCH AUDIO/SPEECH UNLOCKER
+  // Khusus iPhone XR (iOS WebKit): AudioContext, HTML5 Audio, dan Web Speech API
+  // wajib di-unlock pada sentuhan pertama (termasuk saat menekan tombol Mulai).
   // --------------------------------------------------------------------------
   let audioCtx = null;
+  let iosAudioUnlocked = false;
+  let sharedTTSAudio = null;
 
   function ensureAudioContext() {
     if (!audioCtx) {
@@ -648,10 +866,44 @@
       }
     }
     if (audioCtx && audioCtx.state === 'suspended') {
-      audioCtx.resume();
+      audioCtx.resume().catch(() => {});
     }
     return audioCtx;
   }
+
+  function unlockiOSAudioAndSpeech() {
+    try {
+      const ctx = ensureAudioContext();
+      if (ctx) {
+        // Mainkan buffer hening 1 sampel untuk membuka kunci hardware audio iPhone
+        const buffer = ctx.createBuffer(1, 1, 22050);
+        const source = ctx.createBufferSource();
+        source.buffer = buffer;
+        source.connect(ctx.destination);
+        if (source.start) source.start(0);
+      }
+
+      if (!sharedTTSAudio) {
+        sharedTTSAudio = new Audio();
+        sharedTTSAudio.referrerPolicy = 'no-referrer';
+        sharedTTSAudio.preload = 'auto';
+      }
+
+      if (!iosAudioUnlocked && 'speechSynthesis' in window) {
+        iosAudioUnlocked = true;
+        window.speechSynthesis.getVoices();
+        // Unlock antrean Web Speech API (id-ID) di iOS Safari/Chrome pada sentuhan pertama
+        const warmUtter = new SpeechSynthesisUtterance(' ');
+        warmUtter.lang = 'id-ID';
+        warmUtter.volume = 0.01;
+        window.speechSynthesis.speak(warmUtter);
+      }
+    } catch (_) {}
+  }
+
+  // Pasang pendengar sentuhan pertama global untuk iPhone XR
+  window.addEventListener('touchstart', unlockiOSAudioAndSpeech, { once: true, passive: true });
+  window.addEventListener('pointerdown', unlockiOSAudioAndSpeech, { once: true, passive: true });
 
   function playPop(freqStart = 520, freqEnd = 880) {
     try {
@@ -729,11 +981,10 @@
   }
 
   // --------------------------------------------------------------------------
-  // 7. MESIN PELAFALAN BAHASA INDONESIA NATURAL (DUAL-ENGINE)
+  // 8. MESIN PELAFALAN BAHASA INDONESIA NATURAL (DUAL-ENGINE + iOS READY)
   // --------------------------------------------------------------------------
   let currentInstructionText =
-    'Selamat datang di Petualangan Kebun dan Pasar Cilik. Silakan pilih permainanmu.';
-  let activeAudioElement = null;
+    'Selamat datang di Petualangan Kebun dan Pasar Cilik. Silakan pilih akunmu lalu tekan Mulai Bermain.';
   let speechFallbackTimer = null;
 
   function scoreIndonesianVoice(v) {
@@ -809,12 +1060,10 @@
       clearTimeout(speechFallbackTimer);
       speechFallbackTimer = null;
     }
-    if (activeAudioElement) {
+    if (sharedTTSAudio) {
       try {
-        activeAudioElement.pause();
-        activeAudioElement.src = '';
+        sharedTTSAudio.pause();
       } catch (_) {}
-      activeAudioElement = null;
     }
     if ('speechSynthesis' in window) {
       try {
@@ -857,51 +1106,44 @@
 
     if (navigator.onLine !== false) {
       try {
+        if (!sharedTTSAudio) {
+          sharedTTSAudio = new Audio();
+          sharedTTSAudio.referrerPolicy = 'no-referrer';
+        }
+
         const ttsUrl =
           'https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=id&dt=t&q=' +
           encodeURIComponent(cleanText);
 
-        const audio = new Audio();
-        audio.referrerPolicy = 'no-referrer';
-        audio.preload = 'auto';
-        audio.src = ttsUrl;
-        activeAudioElement = audio;
+        sharedTTSAudio.src = ttsUrl;
 
         let settled = false;
         const fallbackToSpeechSynthesis = () => {
           if (settled) return;
           settled = true;
-          if (activeAudioElement === audio) {
-            activeAudioElement = null;
-          }
           speakWithWebSpeechAPI(cleanText);
         };
 
-        audio.addEventListener(
-          'playing',
-          () => {
-            settled = true;
-            if (speechFallbackTimer) {
-              clearTimeout(speechFallbackTimer);
-              speechFallbackTimer = null;
-            }
-          },
-          { once: true }
-        );
+        sharedTTSAudio.onplaying = () => {
+          settled = true;
+          if (speechFallbackTimer) {
+            clearTimeout(speechFallbackTimer);
+            speechFallbackTimer = null;
+          }
+        };
 
-        audio.addEventListener('error', fallbackToSpeechSynthesis, { once: true });
+        sharedTTSAudio.onerror = fallbackToSpeechSynthesis;
 
         speechFallbackTimer = setTimeout(() => {
           if (!settled) {
             try {
-              audio.pause();
-              audio.src = '';
+              sharedTTSAudio.pause();
             } catch (_) {}
             fallbackToSpeechSynthesis();
           }
         }, 1100);
 
-        const playPromise = audio.play();
+        const playPromise = sharedTTSAudio.play();
         if (playPromise && typeof playPromise.catch === 'function') {
           playPromise.catch(fallbackToSpeechSynthesis);
         }
@@ -913,14 +1155,54 @@
   }
 
   // --------------------------------------------------------------------------
-  // 8. STATE & LOCALSTORAGE PERSISTENCE
+  // 9. MULTI-ACCOUNT STATE & LOCALSTORAGE PERSISTENCE
   // --------------------------------------------------------------------------
-  const STORAGE_KEY = 'kebun_pasar_cilik_save_v2';
+  const ACCOUNTS_STORAGE_KEY = 'kebun_pasar_cilik_accounts_v1';
+
+  const DEFAULT_PROFILES = [
+    {
+      id: 'prof_budi',
+      name: 'Budi',
+      avatar: {
+        gender: 'boy',
+        hairStyle: 'jambul_ceria',
+        hairColor: 'hitam',
+        outfit: 'kebun_denim',
+        accessory: 'topi_petani'
+      },
+      stars: 0,
+      unlockedStickers: ['st_kelinci']
+    },
+    {
+      id: 'prof_siti',
+      name: 'Siti',
+      avatar: {
+        gender: 'girl',
+        hairStyle: 'kuncir_dua',
+        hairColor: 'hitam',
+        outfit: 'pesta_ungu',
+        accessory: 'pita_merah'
+      },
+      stars: 0,
+      unlockedStickers: ['st_kelinci']
+    }
+  ];
 
   const state = {
+    profiles: [],
+    activeProfileId: null,
+    editingProfileId: null,
+    draftAvatar: {
+      gender: 'boy',
+      hairStyle: 'pendek_rapi',
+      hairColor: 'hitam',
+      outfit: 'kaos_merah',
+      accessory: 'tanpa'
+    },
+    activeCreatorTab: 'hairStyle',
     stars: 0,
     unlockedStickers: ['st_kelinci'],
-    currentScreen: 'home',
+    currentScreen: 'profiles',
     activeMode: null,
     roundProgress: 0,
     kebunMissionIndex: 0,
@@ -928,28 +1210,69 @@
     isTransitioning: false
   };
 
+  function getActiveProfile() {
+    return (
+      state.profiles.find((p) => p.id === state.activeProfileId) || state.profiles[0] || null
+    );
+  }
+
+  function syncActiveProfileToGameState() {
+    const prof = getActiveProfile();
+    if (!prof) return;
+    state.activeProfileId = prof.id;
+    state.stars = typeof prof.stars === 'number' ? prof.stars : 0;
+    state.unlockedStickers = Array.isArray(prof.unlockedStickers)
+      ? [...prof.unlockedStickers]
+      : ['st_kelinci'];
+    updateTopBarUI();
+  }
+
   function loadState() {
     try {
-      const raw =
-        localStorage.getItem(STORAGE_KEY) || localStorage.getItem('kebun_pasar_cilik_save_v1');
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (typeof parsed.stars === 'number') state.stars = parsed.stars;
-        if (Array.isArray(parsed.unlockedStickers) && parsed.unlockedStickers.length > 0) {
-          state.unlockedStickers = parsed.unlockedStickers;
+      const rawAccounts = localStorage.getItem(ACCOUNTS_STORAGE_KEY);
+      if (rawAccounts) {
+        const parsed = JSON.parse(rawAccounts);
+        if (Array.isArray(parsed.profiles) && parsed.profiles.length > 0) {
+          state.profiles = parsed.profiles;
+          state.activeProfileId = parsed.activeProfileId || parsed.profiles[0].id;
         }
       }
-    } catch (_) {}
-    updateTopBarUI();
+
+      // Migrasi progres lama jika ada
+      if (state.profiles.length === 0) {
+        state.profiles = JSON.parse(JSON.stringify(DEFAULT_PROFILES));
+        const legacyRaw =
+          localStorage.getItem('kebun_pasar_cilik_save_v2') ||
+          localStorage.getItem('kebun_pasar_cilik_save_v1');
+        if (legacyRaw) {
+          const leg = JSON.parse(legacyRaw);
+          if (typeof leg.stars === 'number') state.profiles[0].stars = leg.stars;
+          if (Array.isArray(leg.unlockedStickers) && leg.unlockedStickers.length > 0) {
+            state.profiles[0].unlockedStickers = leg.unlockedStickers;
+          }
+        }
+        state.activeProfileId = state.profiles[0].id;
+      }
+    } catch (_) {
+      state.profiles = JSON.parse(JSON.stringify(DEFAULT_PROFILES));
+      state.activeProfileId = state.profiles[0].id;
+    }
+
+    syncActiveProfileToGameState();
   }
 
   function saveState() {
     try {
+      const prof = getActiveProfile();
+      if (prof) {
+        prof.stars = state.stars;
+        prof.unlockedStickers = [...state.unlockedStickers];
+      }
       localStorage.setItem(
-        STORAGE_KEY,
+        ACCOUNTS_STORAGE_KEY,
         JSON.stringify({
-          stars: state.stars,
-          unlockedStickers: state.unlockedStickers
+          profiles: state.profiles,
+          activeProfileId: state.activeProfileId
         })
       );
     } catch (_) {}
@@ -959,14 +1282,234 @@
   function updateTopBarUI() {
     const starEl = document.getElementById('starCountText');
     const badgeEl = document.getElementById('stickerCountBadge');
+    const topNameEl = document.getElementById('topBarPlayerName');
+    const topAvatarEl = document.getElementById('topBarAvatarBox');
+    const homeAvatarEl = document.getElementById('homeAvatarHero');
+    const homeTitleEl = document.getElementById('homeWelcomeTitle');
+
     if (starEl) starEl.textContent = String(state.stars);
     if (badgeEl) {
       badgeEl.textContent = `${state.unlockedStickers.length}/${STICKER_COLLECTION.length}`;
     }
+
+    const prof = getActiveProfile();
+    if (prof) {
+      if (topNameEl) topNameEl.textContent = prof.name;
+      if (topAvatarEl) topAvatarEl.innerHTML = renderAvatarHeadSVG(prof.avatar, 38);
+      if (homeAvatarEl) homeAvatarEl.innerHTML = renderAvatarHeadSVG(prof.avatar, 62);
+      if (homeTitleEl) homeTitleEl.textContent = `Halo, ${prof.name}! 👋`;
+    }
   }
 
   // --------------------------------------------------------------------------
-  // 9. UTILITY HELPERS
+  // 10. MULTI-ACCOUNT UI & HEAD AVATAR CREATOR LOGIC
+  // --------------------------------------------------------------------------
+  function renderProfilesListScreen() {
+    const container = document.getElementById('profilesListContainer');
+    if (!container) return;
+    container.innerHTML = '';
+
+    state.profiles.forEach((prof) => {
+      const isSelected = prof.id === state.activeProfileId;
+      const card = document.createElement('div');
+      card.className = `profile-select-card ${isSelected ? 'selected' : ''}`;
+      card.innerHTML = `
+        <div class="profile-card-avatar">${renderAvatarHeadSVG(prof.avatar, 58)}</div>
+        <div class="profile-card-details">
+          <div class="profile-card-name">${prof.name} ${isSelected ? '✅' : ''}</div>
+          <div class="profile-card-stats">⭐ ${prof.stars} Bintang &bull; 📒 ${prof.unlockedStickers.length}/100 Stiker</div>
+        </div>
+        <button type="button" class="clay-btn clay-btn-blue btn-edit-prof" style="min-width: 48px; min-height: 48px; padding: 6px; border-radius: 14px; font-size: 1.1rem;" title="Ubah Profil">
+          ✏️
+        </button>
+      `;
+
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('.btn-edit-prof')) return;
+        unlockiOSAudioAndSpeech();
+        playPop(540, 820);
+        state.activeProfileId = prof.id;
+        syncActiveProfileToGameState();
+        saveState();
+        renderProfilesListScreen();
+        speakText(`Akun ${prof.name} dipilih.`, false);
+      });
+
+      const editBtn = card.querySelector('.btn-edit-prof');
+      if (editBtn) {
+        editBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          unlockiOSAudioAndSpeech();
+          playPop(600, 900);
+          openAvatarCreator(prof);
+        });
+      }
+
+      container.appendChild(card);
+    });
+  }
+
+  function openAvatarCreator(existingProfile = null) {
+    if (existingProfile) {
+      state.editingProfileId = existingProfile.id;
+      state.draftAvatar = JSON.parse(JSON.stringify(existingProfile.avatar));
+      const inputEl = document.getElementById('inputProfileName');
+      if (inputEl) inputEl.value = existingProfile.name;
+    } else {
+      state.editingProfileId = null;
+      state.draftAvatar = {
+        gender: 'boy',
+        hairStyle: 'pendek_rapi',
+        hairColor: 'hitam',
+        outfit: 'kaos_merah',
+        accessory: 'topi_petani'
+      };
+      const inputEl = document.getElementById('inputProfileName');
+      if (inputEl) inputEl.value = '';
+    }
+
+    state.activeCreatorTab = 'hairStyle';
+    switchScreen('avatarCreator');
+    renderAvatarCreatorUI();
+    speakText(
+      'Ayo ketik namamu, pilih laki-laki atau perempuan, lalu hias rambut, pakaian, dan aksesoris kepalamu.',
+      true
+    );
+  }
+
+  function renderAvatarCreatorUI() {
+    const previewBox = document.getElementById('creatorAvatarPreviewBox');
+    if (previewBox) {
+      previewBox.innerHTML = renderAvatarHeadSVG(state.draftAvatar, 88);
+    }
+
+    const btnBoy = document.getElementById('btnGenderBoy');
+    const btnGirl = document.getElementById('btnGenderGirl');
+    if (btnBoy) btnBoy.classList.toggle('active', state.draftAvatar.gender === 'boy');
+    if (btnGirl) btnGirl.classList.toggle('active', state.draftAvatar.gender === 'girl');
+
+    const tabBtns = document.querySelectorAll('.creator-tab-btn');
+    tabBtns.forEach((btn) => {
+      btn.classList.toggle('active', btn.dataset.tab === state.activeCreatorTab);
+    });
+
+    const grid = document.getElementById('creatorOptionsGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    if (state.activeCreatorTab === 'hairStyle') {
+      AVATAR_HAIR_STYLES.forEach((style) => {
+        const isSel = state.draftAvatar.hairStyle === style.id;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `creator-option-btn ${isSel ? 'selected' : ''}`;
+        const sampleAvatar = { ...state.draftAvatar, hairStyle: style.id };
+        btn.innerHTML = `
+          <div>${renderAvatarHeadSVG(sampleAvatar, 42)}</div>
+          <span>${style.name}</span>
+        `;
+        btn.addEventListener('click', () => {
+          playPop(580, 880);
+          state.draftAvatar.hairStyle = style.id;
+          renderAvatarCreatorUI();
+        });
+        grid.appendChild(btn);
+      });
+    } else if (state.activeCreatorTab === 'hairColor') {
+      AVATAR_HAIR_COLORS.forEach((color) => {
+        const isSel = state.draftAvatar.hairColor === color.id;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `creator-option-btn ${isSel ? 'selected' : ''}`;
+        btn.innerHTML = `
+          <span class="color-swatch-circle" style="background:${color.hex}"></span>
+          <span>${color.name}</span>
+        `;
+        btn.addEventListener('click', () => {
+          playPop(600, 900);
+          state.draftAvatar.hairColor = color.id;
+          renderAvatarCreatorUI();
+        });
+        grid.appendChild(btn);
+      });
+    } else if (state.activeCreatorTab === 'outfit') {
+      AVATAR_OUTFITS.forEach((outfit) => {
+        const isSel = state.draftAvatar.outfit === outfit.id;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `creator-option-btn ${isSel ? 'selected' : ''}`;
+        const sampleAvatar = { ...state.draftAvatar, outfit: outfit.id };
+        btn.innerHTML = `
+          <div>${renderAvatarHeadSVG(sampleAvatar, 42)}</div>
+          <span>${outfit.name}</span>
+        `;
+        btn.addEventListener('click', () => {
+          playPop(620, 920);
+          state.draftAvatar.outfit = outfit.id;
+          renderAvatarCreatorUI();
+        });
+        grid.appendChild(btn);
+      });
+    } else if (state.activeCreatorTab === 'accessory') {
+      AVATAR_ACCESSORIES.forEach((acc) => {
+        const isSel = state.draftAvatar.accessory === acc.id;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `creator-option-btn ${isSel ? 'selected' : ''}`;
+        const sampleAvatar = { ...state.draftAvatar, accessory: acc.id };
+        btn.innerHTML = `
+          <div>${renderAvatarHeadSVG(sampleAvatar, 42)}</div>
+          <span>${acc.name}</span>
+        `;
+        btn.addEventListener('click', () => {
+          playPop(640, 960);
+          state.draftAvatar.accessory = acc.id;
+          renderAvatarCreatorUI();
+        });
+        grid.appendChild(btn);
+      });
+    }
+  }
+
+  function saveProfileFromCreator() {
+    unlockiOSAudioAndSpeech();
+    playSuccessMelody();
+
+    const inputEl = document.getElementById('inputProfileName');
+    const rawName = inputEl ? inputEl.value.trim() : '';
+    const finalName =
+      rawName || (state.draftAvatar.gender === 'girl' ? 'Putri Ceria' : 'Jagoan Cilik');
+
+    if (state.editingProfileId) {
+      const existing = state.profiles.find((p) => p.id === state.editingProfileId);
+      if (existing) {
+        existing.name = finalName;
+        existing.avatar = JSON.parse(JSON.stringify(state.draftAvatar));
+        state.activeProfileId = existing.id;
+      }
+    } else {
+      const newProfile = {
+        id: 'prof_' + Date.now(),
+        name: finalName,
+        avatar: JSON.parse(JSON.stringify(state.draftAvatar)),
+        stars: 0,
+        unlockedStickers: ['st_kelinci']
+      };
+      state.profiles.push(newProfile);
+      state.activeProfileId = newProfile.id;
+    }
+
+    syncActiveProfileToGameState();
+    saveState();
+    switchScreen('home');
+    speakText(
+      `Halo ${finalName}! Foto profilmu keren sekali. Silakan pilih permainan Kebun Ceria atau Pasar Cilik.`,
+      true
+    );
+  }
+
+  // --------------------------------------------------------------------------
+  // 11. UTILITY HELPERS
   // --------------------------------------------------------------------------
   function shuffleArray(arr) {
     const copy = [...arr];
@@ -993,6 +1536,8 @@
   function switchScreen(screenName) {
     state.currentScreen = screenName;
     const screens = {
+      profiles: document.getElementById('screenProfiles'),
+      avatarCreator: document.getElementById('screenAvatarCreator'),
       home: document.getElementById('screenHome'),
       kebun: document.getElementById('screenKebun'),
       pasar: document.getElementById('screenPasar'),
@@ -1021,7 +1566,7 @@
   }
 
   // --------------------------------------------------------------------------
-  // 10. CONFETTI & REWARD MODAL (SETIAP 10 SOAL SELESAI)
+  // 12. CONFETTI & REWARD MODAL (SETIAP 10 SOAL SELESAI)
   // --------------------------------------------------------------------------
   function spawnConfettiRain() {
     const container = document.getElementById('confettiContainer');
@@ -1083,6 +1628,8 @@
     const modal = document.getElementById('rewardModal');
     const box = document.getElementById('rewardStickerBox');
     const nameEl = document.getElementById('rewardStickerName');
+    const prof = getActiveProfile();
+    const childName = prof ? prof.name : 'Teman Kecil';
 
     if (box) box.innerHTML = renderItemGraphic(sticker, 74);
     if (nameEl) nameEl.textContent = sticker.name;
@@ -1090,7 +1637,7 @@
 
     playSuccessMelody();
     speakText(
-      `Hore, sepuluh soal telah selesai! Kamu berhasil mendapatkan satu bintang baru dan membuka stiker ${sticker.name}.`,
+      `Hore, sepuluh soal telah selesai! Selamat ${childName}, kamu mendapatkan satu bintang baru dan membuka stiker ${sticker.name}.`,
       false
     );
   }
@@ -1115,7 +1662,7 @@
   }
 
   // --------------------------------------------------------------------------
-  // 11. POINTER DRAG-AND-DROP + TAP-TO-MOVE HELPER FOR "KEBUN CERIA"
+  // 13. POINTER DRAG-AND-DROP + TAP-TO-MOVE HELPER FOR "KEBUN CERIA"
   // --------------------------------------------------------------------------
   function attachTapAndDragToFruit(tokenEl, basketEl, onDropCallback) {
     let startX = 0;
@@ -1189,9 +1736,10 @@
   }
 
   // --------------------------------------------------------------------------
-  // 12. MODE A: "KEBUN CERIA" (USIA TK / 3-5 TAHUN)
+  // 14. MODE A: "KEBUN CERIA" (USIA TK / 3-5 TAHUN)
   // --------------------------------------------------------------------------
   function startKebunMode() {
+    unlockiOSAudioAndSpeech();
     playPop();
     state.activeMode = 'kebun';
     state.roundProgress = 0;
@@ -1315,7 +1863,7 @@
     const mascotEl = document.getElementById('kebunMascot');
     if (!stage) return;
 
-    const targetNumber = Math.floor(Math.random() * 4) + 2; // 2 sampai 5
+    const targetNumber = Math.floor(Math.random() * 4) + 2;
     const targetWordSpoken = INDONESIAN_NUMBERS[targetNumber];
     const targetWordUpper = targetWordSpoken.toUpperCase();
     const targetFruit = pickRandom(VOCAB_BANK);
@@ -1473,9 +2021,10 @@
   }
 
   // --------------------------------------------------------------------------
-  // 13. MODE B: "PASAR CILIK" (USIA 6-7 TAHUN)
+  // 15. MODE B: "PASAR CILIK" (USIA 6-7 TAHUN)
   // --------------------------------------------------------------------------
   function startPasarMode() {
+    unlockiOSAudioAndSpeech();
     playPop();
     state.activeMode = 'pasar';
     state.roundProgress = 0;
@@ -1638,9 +2187,9 @@
     const fruitA = pickRandom(VOCAB_BANK);
     const fruitB = pickRandom(VOCAB_BANK.filter((v) => v.id !== fruitA.id));
 
-    const countA = Math.floor(Math.random() * 4) + 3; // 3..6
-    const countB = Math.floor(Math.random() * 5) + 3; // 3..7
-    const targetTotal = countA + countB; // 6..13 koin
+    const countA = Math.floor(Math.random() * 4) + 3;
+    const countB = Math.floor(Math.random() * 5) + 3;
+    const targetTotal = countA + countB;
 
     let currentPaid = 0;
     let selectedCoinsList = [];
@@ -1858,14 +2407,17 @@
   }
 
   // --------------------------------------------------------------------------
-  // 14. ALBUM 100 STIKER KOLEKSI SCREEN
+  // 16. ALBUM 100 STIKER KOLEKSI SCREEN
   // --------------------------------------------------------------------------
   function openStickerAlbum() {
+    unlockiOSAudioAndSpeech();
     playPop();
     switchScreen('album');
     const countText =
       INDONESIAN_NUMBERS[state.unlockedStickers.length] || String(state.unlockedStickers.length);
-    const instruction = `Ini adalah Album seratus Stiker koleksimu. Kamu sudah membuka ${countText} stiker. Ketuk stiker yang sudah terbuka untuk mendengarkan suaranya.`;
+    const prof = getActiveProfile();
+    const childName = prof ? prof.name : 'Teman Kecil';
+    const instruction = `Ini adalah Album seratus Stiker milik ${childName}. Kamu sudah membuka ${countText} stiker. Ketuk stiker yang sudah terbuka untuk mendengarkan suaranya.`;
     speakText(instruction, true);
 
     const grid = document.getElementById('albumGrid');
@@ -1897,13 +2449,23 @@
   }
 
   // --------------------------------------------------------------------------
-  // 15. EVENT LISTENERS & SERVICE WORKER AUTO-UPDATE
+  // 17. EVENT LISTENERS & SERVICE WORKER AUTO-UPDATE
   // --------------------------------------------------------------------------
   function initApp() {
     loadState();
+    renderProfilesListScreen();
 
     const btnHome = document.getElementById('btnHome');
+    const btnActiveProfile = document.getElementById('btnActiveProfile');
     const btnSpeaker = document.getElementById('btnSpeaker');
+    const btnAddNewProfile = document.getElementById('btnAddNewProfile');
+    const btnStartWithSelectedProfile = document.getElementById('btnStartWithSelectedProfile');
+    const btnGenderBoy = document.getElementById('btnGenderBoy');
+    const btnGenderGirl = document.getElementById('btnGenderGirl');
+    const creatorTabsRow = document.getElementById('creatorTabsRow');
+    const btnCancelCreator = document.getElementById('btnCancelCreator');
+    const btnSaveProfile = document.getElementById('btnSaveProfile');
+    const btnEditCurrentAvatar = document.getElementById('btnEditCurrentAvatar');
     const btnModeKebun = document.getElementById('btnModeKebun');
     const btnModePasar = document.getElementById('btnModePasar');
     const btnOpenAlbum = document.getElementById('btnOpenAlbum');
@@ -1911,21 +2473,113 @@
 
     if (btnHome) {
       btnHome.addEventListener('click', () => {
+        unlockiOSAudioAndSpeech();
         playPop(500, 750);
         state.activeMode = null;
         state.isTransitioning = false;
         switchScreen('home');
+        const prof = getActiveProfile();
         speakText(
-          'Selamat datang di halaman utama. Silakan pilih permainan Kebun Ceria atau Pasar Cilik.',
+          `Halo ${prof ? prof.name : ''}, silakan pilih permainan Kebun Ceria atau Pasar Cilik.`,
           true
         );
       });
     }
 
+    if (btnActiveProfile) {
+      btnActiveProfile.addEventListener('click', () => {
+        unlockiOSAudioAndSpeech();
+        playPop(540, 800);
+        state.activeMode = null;
+        state.isTransitioning = false;
+        renderProfilesListScreen();
+        switchScreen('profiles');
+        speakText('Siapa yang ingin bermain hari ini? Pilih akunmu atau buat akun baru ya.', true);
+      });
+    }
+
     if (btnSpeaker) {
       btnSpeaker.addEventListener('click', () => {
+        unlockiOSAudioAndSpeech();
         playPop(680, 940);
         speakText(currentInstructionText, false);
+      });
+    }
+
+    if (btnAddNewProfile) {
+      btnAddNewProfile.addEventListener('click', () => {
+        unlockiOSAudioAndSpeech();
+        playPop(600, 900);
+        openAvatarCreator(null);
+      });
+    }
+
+    if (btnStartWithSelectedProfile) {
+      btnStartWithSelectedProfile.addEventListener('click', () => {
+        // Sentuhan pertama tombol Mulai langsung mengaktifkan AudioContext & Web Speech API di iPhone XR
+        unlockiOSAudioAndSpeech();
+        playSuccessMelody();
+        updateTopBarUI();
+        switchScreen('home');
+        const prof = getActiveProfile();
+        speakText(
+          `Halo ${prof ? prof.name : 'Teman Kecil'}! Selamat datang di Petualangan Kebun dan Pasar Cilik. Silakan pilih permainanmu.`,
+          true
+        );
+      });
+    }
+
+    if (btnGenderBoy) {
+      btnGenderBoy.addEventListener('click', () => {
+        playPop(540, 820);
+        state.draftAvatar.gender = 'boy';
+        if (state.draftAvatar.hairStyle === 'kuncir_dua' || state.draftAvatar.hairStyle === 'hijab_ceria') {
+          state.draftAvatar.hairStyle = 'pendek_rapi';
+        }
+        renderAvatarCreatorUI();
+        speakText('Laki-laki.', false);
+      });
+    }
+
+    if (btnGenderGirl) {
+      btnGenderGirl.addEventListener('click', () => {
+        playPop(620, 920);
+        state.draftAvatar.gender = 'girl';
+        if (state.draftAvatar.hairStyle === 'pendek_rapi' || state.draftAvatar.hairStyle === 'jambul_ceria') {
+          state.draftAvatar.hairStyle = 'kuncir_dua';
+        }
+        renderAvatarCreatorUI();
+        speakText('Perempuan.', false);
+      });
+    }
+
+    if (creatorTabsRow) {
+      creatorTabsRow.addEventListener('click', (e) => {
+        const tabBtn = e.target.closest('.creator-tab-btn');
+        if (!tabBtn) return;
+        playPop(560, 840);
+        state.activeCreatorTab = tabBtn.dataset.tab;
+        renderAvatarCreatorUI();
+      });
+    }
+
+    if (btnCancelCreator) {
+      btnCancelCreator.addEventListener('click', () => {
+        playPop(480, 700);
+        renderProfilesListScreen();
+        switchScreen('profiles');
+      });
+    }
+
+    if (btnSaveProfile) {
+      btnSaveProfile.addEventListener('click', saveProfileFromCreator);
+    }
+
+    if (btnEditCurrentAvatar) {
+      btnEditCurrentAvatar.addEventListener('click', () => {
+        unlockiOSAudioAndSpeech();
+        playPop(600, 900);
+        openAvatarCreator(getActiveProfile());
       });
     }
 
@@ -1948,7 +2602,7 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker
-          .register('./sw.js?v=5')
+          .register('./sw.js?v=6')
           .then((reg) => {
             reg.update();
           })
