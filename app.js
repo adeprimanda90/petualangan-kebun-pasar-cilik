@@ -4,7 +4,7 @@
    - Sistem Multi-Akun Anak + Pembuat Foto Profil Kepala (Laki-laki & Perempuan,
      Gaya Rambut, Warna, Pakaian Leher, dan Aksesoris Kepala)
    - Ilustrasi SVG Asli & Akurat untuk Buah/Sayur Indonesia
-   - 10 Soal per Set Permainan, 60 Varian Buah/Sayur, 100 Koleksi Stiker
+   - 10 Soal per Set Permainan, 100 Varian Buah & Sayur (7 Warna Beragam), Koleksi Stiker
    ========================================================================== */
 
 (() => {
@@ -545,6 +545,278 @@
       <path d="M40 12 V24" stroke="#15803d" stroke-width="4" stroke-linecap="round"/>
       <path d="M40 22 C18 22, 14 44, 28 56 C36 62, 40 68, 40 72 C40 68, 44 62, 52 56 C66 44, 62 22, 40 22 Z" fill="#fde68a" stroke="#b45309" stroke-width="2.5"/>
       <circle cx="56" cy="54" r="13" fill="#ffffff" stroke="#d97706" stroke-width="2"/>
+    </svg>`,
+
+    paprika_merah: `<svg viewBox="0 0 80 80">
+      <path d="M38 22 Q40 8 48 12" stroke="#15803d" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <rect x="20" y="22" width="18" height="44" rx="9" fill="#dc2626" stroke="#991b1b" stroke-width="2"/>
+      <rect x="42" y="22" width="18" height="44" rx="9" fill="#dc2626" stroke="#991b1b" stroke-width="2"/>
+      <rect x="29" y="20" width="22" height="48" rx="10" fill="#ef4444" stroke="#991b1b" stroke-width="2"/>
+      <ellipse cx="35" cy="36" rx="3" ry="9" fill="#ffffff" opacity="0.4"/>
+    </svg>`,
+
+    bit_merah: `<svg viewBox="0 0 80 80">
+      <path d="M34 24 C24 12, 26 6, 36 14 M40 24 V6 M46 24 C56 12, 54 6, 44 14" stroke="#16a34a" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M40 22 C18 22, 16 48, 34 60 C38 64, 40 70, 40 74 C40 70, 42 64, 46 60 C64 48, 62 22, 40 22 Z" fill="#9f1239" stroke="#4c0519" stroke-width="2.5"/>
+      <circle cx="54" cy="54" r="13" fill="#ffe4e6" stroke="#be123c" stroke-width="2"/>
+      <circle cx="54" cy="54" r="8" fill="#e11d48"/>
+      <circle cx="54" cy="54" r="4" fill="#fda4af"/>
+    </svg>`,
+
+    kranberi: `<svg viewBox="0 0 80 80">
+      <path d="M22 24 Q40 14 58 26" stroke="#15803d" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <ellipse cx="32" cy="18" rx="9" ry="5" transform="rotate(-20 32 18)" fill="#22c55e"/>
+      <ellipse cx="48" cy="18" rx="9" ry="5" transform="rotate(20 48 18)" fill="#16a34a"/>
+      <circle cx="26" cy="44" r="13" fill="#dc2626" stroke="#7f1d1d" stroke-width="2"/>
+      <circle cx="52" cy="44" r="13" fill="#b91c1c" stroke="#7f1d1d" stroke-width="2"/>
+      <circle cx="39" cy="52" r="14" fill="#ef4444" stroke="#7f1d1d" stroke-width="2"/>
+      <circle cx="35" cy="48" r="3.5" fill="#ffffff" opacity="0.6"/>
+    </svg>`,
+
+    frambos: `<svg viewBox="0 0 80 80">
+      <path d="M30 18 L40 10 L50 18 L44 24 L36 24 Z" fill="#16a34a" stroke="#14532d" stroke-width="2"/>
+      <circle cx="30" cy="32" r="9" fill="#e11d48" stroke="#881337" stroke-width="1.8"/>
+      <circle cx="50" cy="32" r="9" fill="#e11d48" stroke="#881337" stroke-width="1.8"/>
+      <circle cx="40" cy="30" r="9" fill="#f43f5e" stroke="#881337" stroke-width="1.8"/>
+      <circle cx="26" cy="44" r="9" fill="#be123c" stroke="#881337" stroke-width="1.8"/>
+      <circle cx="54" cy="44" r="9" fill="#be123c" stroke="#881337" stroke-width="1.8"/>
+      <circle cx="40" cy="44" r="10" fill="#f43f5e" stroke="#881337" stroke-width="1.8"/>
+      <circle cx="33" cy="56" r="9" fill="#e11d48" stroke="#881337" stroke-width="1.8"/>
+      <circle cx="47" cy="56" r="9" fill="#e11d48" stroke="#881337" stroke-width="1.8"/>
+      <circle cx="40" cy="64" r="8" fill="#be123c" stroke="#881337" stroke-width="1.8"/>
+    </svg>`,
+
+    bayam_merah: `<svg viewBox="0 0 80 80">
+      <ellipse cx="28" cy="36" rx="15" ry="21" transform="rotate(-18 28 36)" fill="#be123c" stroke="#4c0519" stroke-width="2"/>
+      <ellipse cx="52" cy="36" rx="15" ry="21" transform="rotate(18 52 36)" fill="#9f1239" stroke="#4c0519" stroke-width="2"/>
+      <ellipse cx="40" cy="32" rx="16" ry="22" fill="#e11d48" stroke="#881337" stroke-width="2"/>
+      <path d="M40 16 V68 M40 30 L32 24 M40 38 L48 32 M40 46 L32 40" stroke="#fda4af" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>`,
+
+    kacang_merah: `<svg viewBox="0 0 80 80">
+      <path d="M18 36 C12 22, 30 14, 40 24 C46 30, 42 46, 28 48 C18 48, 20 42, 18 36 Z" fill="#b91c1c" stroke="#450a0a" stroke-width="2.5"/>
+      <ellipse cx="30" cy="32" rx="4" ry="2" fill="#ffffff"/>
+      <path d="M38 54 C32 40, 50 32, 60 42 C66 48, 62 64, 48 66 C38 66, 40 60, 38 54 Z" fill="#dc2626" stroke="#450a0a" stroke-width="2.5"/>
+      <ellipse cx="50" cy="50" rx="4" ry="2" fill="#ffffff"/>
+    </svg>`,
+
+    langsat: `<svg viewBox="0 0 80 80">
+      <path d="M18 18 Q40 10 62 20" stroke="#78350f" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <ellipse cx="26" cy="36" rx="11" ry="14" fill="#fde047" stroke="#ca8a04" stroke-width="2"/>
+      <ellipse cx="44" cy="34" rx="11" ry="14" fill="#fef08a" stroke="#ca8a04" stroke-width="2"/>
+      <ellipse cx="58" cy="40" rx="11" ry="14" fill="#fde047" stroke="#ca8a04" stroke-width="2"/>
+      <ellipse cx="34" cy="54" rx="12" ry="15" fill="#fef08a" stroke="#ca8a04" stroke-width="2"/>
+      <ellipse cx="52" cy="56" rx="12" ry="14" fill="#fef9c3" stroke="#ca8a04" stroke-width="2"/>
+      <ellipse cx="52" cy="56" rx="8" ry="10" fill="#ffffff"/>
+    </svg>`,
+
+    sukun: `<svg viewBox="0 0 80 80">
+      <circle cx="36" cy="42" r="23" fill="#eab308" stroke="#713f12" stroke-width="2.5"/>
+      <path d="M22 30 L50 54 M22 42 L46 62 M30 22 L54 44 M50 30 L22 54 M46 22 L22 44" stroke="#a16207" stroke-width="1.5" opacity="0.65"/>
+      <path d="M42 40 A18 18 0 0 1 66 58 L42 58 Z" fill="#fef9c3" stroke="#ca8a04" stroke-width="2.5"/>
+    </svg>`,
+
+    kunyit: `<svg viewBox="0 0 80 80">
+      <path d="M16 48 C14 36, 28 24, 48 26 C60 26, 64 38, 52 46 C38 54, 20 58, 16 48 Z" fill="#eab308" stroke="#854d0e" stroke-width="2.5"/>
+      <ellipse cx="36" cy="24" rx="10" ry="6" transform="rotate(-20 36 24)" fill="#ca8a04" stroke="#854d0e" stroke-width="2"/>
+      <circle cx="54" cy="54" r="12" fill="#facc15" stroke="#854d0e" stroke-width="2.5"/>
+      <circle cx="54" cy="54" r="8" fill="#f97316"/>
+    </svg>`,
+
+    melon_emas: `<svg viewBox="0 0 80 80">
+      <circle cx="36" cy="40" r="22" fill="#facc15" stroke="#ca8a04" stroke-width="2.5"/>
+      <path d="M36 18 Q42 10 48 14" stroke="#15803d" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <path d="M28 52 A22 22 0 0 0 68 52 Z" fill="#fef9c3" stroke="#eab308" stroke-width="2.5"/>
+      <path d="M32 52 A16 16 0 0 0 64 52 Z" fill="#fde047"/>
+    </svg>`,
+
+    paprika_kuning: `<svg viewBox="0 0 80 80">
+      <path d="M38 22 Q40 8 48 12" stroke="#15803d" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <rect x="20" y="22" width="18" height="44" rx="9" fill="#eab308" stroke="#a16207" stroke-width="2"/>
+      <rect x="42" y="22" width="18" height="44" rx="9" fill="#eab308" stroke="#a16207" stroke-width="2"/>
+      <rect x="29" y="20" width="22" height="48" rx="10" fill="#facc15" stroke="#a16207" stroke-width="2"/>
+      <ellipse cx="35" cy="36" rx="3" ry="9" fill="#ffffff" opacity="0.5"/>
+    </svg>`,
+
+    kangkung: `<svg viewBox="0 0 80 80">
+      <path d="M32 68 L24 34 M40 68 V28 M48 68 L56 34" stroke="#16a34a" stroke-width="4" stroke-linecap="round"/>
+      <path d="M24 14 C14 26, 16 38, 24 38 C32 38, 34 26, 24 14 Z" fill="#22c55e" stroke="#14532d" stroke-width="2"/>
+      <path d="M40 10 C30 22, 32 36, 40 36 C48 36, 50 22, 40 10 Z" fill="#16a34a" stroke="#14532d" stroke-width="2"/>
+      <path d="M56 14 C46 26, 48 38, 56 38 C64 38, 66 26, 56 14 Z" fill="#22c55e" stroke="#14532d" stroke-width="2"/>
+      <rect x="30" y="54" width="20" height="6" rx="3" fill="#ef4444"/>
+    </svg>`,
+
+    buncis: `<svg viewBox="0 0 80 80">
+      <path d="M18 58 C20 36, 36 18, 56 14 C60 18, 44 42, 26 62 Z" fill="#22c55e" stroke="#14532d" stroke-width="2.2"/>
+      <path d="M28 64 C32 42, 46 24, 64 20 C68 24, 52 48, 36 68 Z" fill="#4ade80" stroke="#15803d" stroke-width="2.2"/>
+      <circle cx="38" cy="40" r="3" fill="#86efac"/><circle cx="46" cy="30" r="3" fill="#86efac"/>
+    </svg>`,
+
+    petai: `<svg viewBox="0 0 80 80">
+      <path d="M22 14 C14 30, 18 54, 34 68 C48 60, 56 36, 44 14 Z" fill="#16a34a" stroke="#14532d" stroke-width="2.5"/>
+      <ellipse cx="33" cy="26" rx="6" ry="8" fill="#a3e635" stroke="#14532d" stroke-width="1.5"/>
+      <ellipse cx="31" cy="42" rx="6" ry="8" fill="#a3e635" stroke="#14532d" stroke-width="1.5"/>
+      <ellipse cx="34" cy="56" rx="6" ry="8" fill="#a3e635" stroke="#14532d" stroke-width="1.5"/>
+      <ellipse cx="56" cy="48" rx="9" ry="12" fill="#84cc16" stroke="#365314" stroke-width="2"/>
+    </svg>`,
+
+    seledri: `<svg viewBox="0 0 80 80">
+      <path d="M34 68 L26 28 M40 68 V24 M46 68 L54 28" stroke="#4ade80" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="24" cy="24" r="9" fill="#16a34a"/><circle cx="40" cy="18" r="10" fill="#22c55e"/><circle cx="56" cy="24" r="9" fill="#16a34a"/>
+      <circle cx="32" cy="22" r="8" fill="#4ade80"/><circle cx="48" cy="22" r="8" fill="#4ade80"/>
+    </svg>`,
+
+    jeruk_nipis: `<svg viewBox="0 0 80 80">
+      <circle cx="30" cy="40" r="19" fill="#16a34a" stroke="#14532d" stroke-width="2.5"/>
+      <circle cx="52" cy="50" r="18" fill="#bbf7d0" stroke="#15803d" stroke-width="2.5"/>
+      <circle cx="52" cy="50" r="14" fill="#4ade80"/>
+      <path d="M52 36 V64 M38 50 H66 M42 40 L62 60 M62 40 L42 60" stroke="#dcfce7" stroke-width="2"/>
+    </svg>`,
+
+    labu_siam: `<svg viewBox="0 0 80 80">
+      <path d="M40 14 C26 14, 24 30, 18 46 C14 60, 26 70, 40 68 C54 70, 66 60, 62 46 C56 30, 54 14, 40 14 Z" fill="#86efac" stroke="#15803d" stroke-width="2.5"/>
+      <path d="M32 60 Q40 54 48 60 M40 24 V56" stroke="#16a34a" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </svg>`,
+
+    daun_bawang: `<svg viewBox="0 0 80 80">
+      <path d="M24 64 L32 44 M28 66 L36 46" stroke="#f8fafc" stroke-width="7" stroke-linecap="round"/>
+      <path d="M32 44 L46 14 M34 46 L56 20 M36 46 L62 30" stroke="#16a34a" stroke-width="5.5" stroke-linecap="round"/>
+      <circle cx="24" cy="65" r="4" fill="#e2e8f0"/>
+    </svg>`,
+
+    selada: `<svg viewBox="0 0 80 80">
+      <circle cx="28" cy="36" r="15" fill="#22c55e" stroke="#15803d" stroke-width="2"/>
+      <circle cx="52" cy="36" r="15" fill="#22c55e" stroke="#15803d" stroke-width="2"/>
+      <circle cx="40" cy="28" r="16" fill="#4ade80" stroke="#15803d" stroke-width="2"/>
+      <circle cx="32" cy="50" r="15" fill="#4ade80" stroke="#15803d" stroke-width="2"/>
+      <circle cx="48" cy="50" r="15" fill="#86efac" stroke="#15803d" stroke-width="2"/>
+      <path d="M34 62 L40 46 L46 62 Z" fill="#dcfce7"/>
+    </svg>`,
+
+    blewah: `<svg viewBox="0 0 80 80">
+      <circle cx="36" cy="40" r="22" fill="#fb923c" stroke="#9a3412" stroke-width="2.5"/>
+      <ellipse cx="36" cy="40" rx="12" ry="22" fill="none" stroke="#15803d" stroke-width="2"/>
+      <path d="M28 54 A22 22 0 0 0 68 54 Z" fill="#ea580c" stroke="#15803d" stroke-width="2.5"/>
+    </svg>`,
+
+    ubi_madu: `<svg viewBox="0 0 80 80">
+      <path d="M16 50 C14 36, 36 18, 58 20 C64 24, 54 48, 32 58 C22 62, 18 56, 16 50 Z" fill="#c2410c" stroke="#7c2d12" stroke-width="2.5"/>
+      <circle cx="54" cy="54" r="14" fill="#ffedd5" stroke="#9a3412" stroke-width="2.5"/>
+      <circle cx="54" cy="54" r="10" fill="#f97316"/>
+    </svg>`,
+
+    cabai_rawit: `<svg viewBox="0 0 80 80">
+      <path d="M26 58 L20 68 M50 60 L56 70" stroke="#15803d" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M26 58 C18 46, 20 22, 30 14 C36 24, 34 48, 26 58 Z" fill="#f97316" stroke="#c2410c" stroke-width="2"/>
+      <path d="M50 60 C42 48, 46 24, 56 16 C62 26, 58 50, 50 60 Z" fill="#ea580c" stroke="#9a3412" stroke-width="2"/>
+    </svg>`,
+
+    jeruk_ponkan: `<svg viewBox="0 0 80 80">
+      <ellipse cx="40" cy="48" rx="24" ry="20" fill="#f97316" stroke="#c2410c" stroke-width="2.5"/>
+      <ellipse cx="40" cy="28" rx="11" ry="7" fill="#fb923c" stroke="#c2410c" stroke-width="2"/>
+      <path d="M40 22 Q50 14 56 20 Q48 26 40 22 Z" fill="#16a34a"/>
+    </svg>`,
+
+    plum_ungu: `<svg viewBox="0 0 80 80">
+      <circle cx="34" cy="44" r="20" fill="#7e22ce" stroke="#3b0764" stroke-width="2.5"/>
+      <path d="M34 24 Q38 38 34 62" stroke="#581c87" stroke-width="2" fill="none"/>
+      <circle cx="54" cy="52" r="15" fill="#fde047" stroke="#6b21a8" stroke-width="2.5"/>
+      <circle cx="54" cy="52" r="5" fill="#78350f"/>
+    </svg>`,
+
+    jamblang: `<svg viewBox="0 0 80 80">
+      <path d="M22 18 Q42 12 60 22" stroke="#15803d" stroke-width="3.5" fill="none"/>
+      <ellipse cx="28" cy="40" rx="10" ry="15" transform="rotate(-12 28 40)" fill="#581c87" stroke="#3b0764" stroke-width="2"/>
+      <ellipse cx="44" cy="46" rx="10" ry="15" fill="#6b21a8" stroke="#3b0764" stroke-width="2"/>
+      <ellipse cx="58" cy="38" rx="10" ry="15" transform="rotate(12 58 38)" fill="#4c1d95" stroke="#3b0764" stroke-width="2"/>
+    </svg>`,
+
+    tin_ungu: `<svg viewBox="0 0 80 80">
+      <path d="M32 14 C28 26, 16 36, 18 50 C20 62, 44 62, 46 50 C48 36, 36 26, 32 14 Z" fill="#6b21a8" stroke="#3b0764" stroke-width="2.5"/>
+      <path d="M52 22 C48 32, 38 42, 40 56 C42 66, 64 66, 66 56 C68 42, 56 32, 52 22 Z" fill="#f3e8ff" stroke="#581c87" stroke-width="2.5"/>
+      <ellipse cx="53" cy="52" rx="9" ry="10" fill="#e11d48"/>
+    </svg>`,
+
+    markisa_ungu: `<svg viewBox="0 0 80 80">
+      <circle cx="40" cy="44" r="24" fill="#6b21a8" stroke="#3b0764" stroke-width="2.5"/>
+      <circle cx="40" cy="44" r="19" fill="#f3e8ff"/>
+      <circle cx="40" cy="44" r="15" fill="#facc15"/>
+      <circle cx="35" cy="40" r="2.2" fill="#1e293b"/><circle cx="45" cy="40" r="2.2" fill="#1e293b"/>
+      <circle cx="38" cy="48" r="2.2" fill="#1e293b"/><circle cx="44" cy="47" r="2.2" fill="#1e293b"/>
+    </svg>`,
+
+    singkong: `<svg viewBox="0 0 80 80">
+      <path d="M14 52 C16 36, 40 18, 62 20 C66 26, 48 48, 26 60 Z" fill="#78350f" stroke="#451a03" stroke-width="2.5"/>
+      <circle cx="52" cy="54" r="14" fill="#ffffff" stroke="#78350f" stroke-width="3"/>
+      <circle cx="52" cy="54" r="2" fill="#d97706"/>
+    </svg>`,
+
+    asam_jawa: `<svg viewBox="0 0 80 80">
+      <path d="M16 48 C18 28, 34 22, 46 28 C58 34, 66 26, 64 42 C60 56, 46 50, 34 56 C22 62, 14 58, 16 48 Z" fill="#92400e" stroke="#451a03" stroke-width="2.5"/>
+      <circle cx="30" cy="44" r="6" fill="#451a03"/><circle cx="46" cy="40" r="6" fill="#451a03"/>
+    </svg>`,
+
+    jahe: `<svg viewBox="0 0 80 80">
+      <ellipse cx="40" cy="48" rx="22" ry="12" fill="#d97706" stroke="#78350f" stroke-width="2.5"/>
+      <circle cx="28" cy="36" r="10" fill="#f59e0b" stroke="#78350f" stroke-width="2"/>
+      <circle cx="46" cy="34" r="11" fill="#d97706" stroke="#78350f" stroke-width="2"/>
+      <circle cx="56" cy="44" r="9" fill="#fef3c7" stroke="#78350f" stroke-width="2"/>
+    </svg>`,
+
+    kelengkeng: `<svg viewBox="0 0 80 80">
+      <path d="M18 18 Q40 12 62 22" stroke="#78350f" stroke-width="3.5" fill="none"/>
+      <circle cx="26" cy="36" r="12" fill="#d97706" stroke="#78350f" stroke-width="2"/>
+      <circle cx="46" cy="34" r="12" fill="#b45309" stroke="#78350f" stroke-width="2"/>
+      <circle cx="34" cy="54" r="12" fill="#d97706" stroke="#78350f" stroke-width="2"/>
+      <circle cx="54" cy="54" r="13" fill="#ffffff" stroke="#78350f" stroke-width="2"/>
+      <circle cx="54" cy="54" r="6" fill="#1e293b"/>
+    </svg>`,
+
+    lobak_putih: `<svg viewBox="0 0 80 80">
+      <path d="M34 22 L26 8 M40 22 V6 M46 22 L54 8" stroke="#16a34a" stroke-width="4.5" stroke-linecap="round"/>
+      <path d="M28 22 H52 L44 68 C42 74, 38 74, 36 68 Z" fill="#f8fafc" stroke="#94a3b8" stroke-width="2.5"/>
+      <path d="M34 36 H42 M36 48 H44" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round"/>
+    </svg>`,
+
+    kembang_kol: `<svg viewBox="0 0 80 80">
+      <circle cx="24" cy="48" r="16" fill="#16a34a"/><circle cx="56" cy="48" r="16" fill="#16a34a"/>
+      <ellipse cx="40" cy="56" rx="22" ry="12" fill="#22c55e"/>
+      <circle cx="30" cy="38" r="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+      <circle cx="50" cy="38" r="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+      <circle cx="40" cy="30" r="13" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+      <circle cx="40" cy="44" r="13" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+    </svg>`,
+
+    jamur_kancing: `<svg viewBox="0 0 80 80">
+      <rect x="26" y="42" width="12" height="20" rx="5" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2"/>
+      <path d="M14 44 C14 22, 50 22, 50 44 Z" fill="#ffffff" stroke="#94a3b8" stroke-width="2.5"/>
+      <rect x="48" y="48" width="10" height="16" rx="4" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2"/>
+      <path d="M38 50 C38 32, 68 32, 68 50 Z" fill="#f8fafc" stroke="#94a3b8" stroke-width="2.5"/>
+    </svg>`,
+
+    tauge: `<svg viewBox="0 0 80 80">
+      <path d="M24 62 Q18 38 34 24 M42 66 Q38 42 52 26 M56 62 Q62 40 48 22" stroke="#f8fafc" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path d="M24 62 Q18 38 34 24 M42 66 Q38 42 52 26 M56 62 Q62 40 48 22" stroke="#94a3b8" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <ellipse cx="34" cy="22" rx="6" ry="4" fill="#fde047" stroke="#ca8a04" stroke-width="1.5"/>
+      <ellipse cx="52" cy="24" rx="6" ry="4" fill="#fde047" stroke="#ca8a04" stroke-width="1.5"/>
+      <ellipse cx="48" cy="20" rx="6" ry="4" fill="#fde047" stroke="#ca8a04" stroke-width="1.5"/>
+    </svg>`,
+
+    sawi_putih: `<svg viewBox="0 0 80 80">
+      <ellipse cx="40" cy="36" rx="20" ry="24" fill="#bef264" stroke="#65a30d" stroke-width="2.2"/>
+      <path d="M26 32 C24 54, 30 68, 40 68 C50 68, 56 54, 54 32 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+      <path d="M34 30 V64 M46 30 V64" stroke="#e2e8f0" stroke-width="2"/>
+    </svg>`,
+
+    rebung: `<svg viewBox="0 0 80 80">
+      <polygon points="40,12 20,64 60,64" fill="#fef9c3" stroke="#a16207" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M28 44 L52 44 M24 54 L56 54" stroke="#b45309" stroke-width="2.5"/>
+    </svg>`,
+
+    pir_putih: `<svg viewBox="0 0 80 80">
+      <path d="M40 16 C32 16, 28 28, 22 42 C18 56, 28 66, 40 66 C52 66, 62 56, 58 42 C52 28, 48 16, 40 16 Z" fill="#fef9c3" stroke="#ca8a04" stroke-width="2.5"/>
+      <circle cx="54" cy="54" r="13" fill="#ffffff" stroke="#ca8a04" stroke-width="2"/>
+      <circle cx="52" cy="54" r="1.8" fill="#1e293b"/><circle cx="56" cy="54" r="1.8" fill="#1e293b"/>
     </svg>`
   };
 
@@ -648,7 +920,16 @@
     YO: 'yoo',
     ZA: 'zaa',
     ZI: 'zii',
-    ZU: 'zuu'
+    ZU: 'zuu',
+    DRI: 'drii',
+    PRI: 'prii',
+    BLU: 'bluu',
+    BLE: 'bleh',
+    SRI: 'srii',
+    STRO: 'stroo',
+    BRO: 'broo',
+    KRAN: 'kran',
+    FRAM: 'fram'
   };
 
   function getSpokenSyllable(syl) {
@@ -675,10 +956,10 @@
   }
 
   // --------------------------------------------------------------------------
-  // 5. BANK 60 VARIAN BUAH, SAYUR & TANAMAN KEBUN (2, 3, HINGGA 4 SUKU KATA)
+  // 5. BANK 100 VARIAN BUAH & SAYUR (7 WARNA BERAGAM, 2-4 SUKU KATA)
   // --------------------------------------------------------------------------
   const VOCAB_BANK = [
-    // --- WARNA MERAH (12 Varian Berbeda) ---
+    // --- 1. WARNA MERAH (18 Varian Berbeda) ---
     item('apel', 'Apel', '🍎', 'MERAH', '#ef4444', ['A', 'PEL']),
     item('semangka', 'Semangka', '🍉', 'MERAH', '#ef4444', ['SE', 'MANG', 'KA']),
     item('tomat', 'Tomat', '🍅', 'MERAH', '#ef4444', ['TO', 'MAT']),
@@ -687,12 +968,18 @@
     item('cabai_merah', 'Cabai Merah', '🌶️', 'MERAH', '#ef4444', ['CA', 'BAI', 'ME', 'RAH']),
     item('delima', 'Delima', '🍎', 'MERAH', '#ef4444', ['DE', 'LI', 'MA']),
     item('rambutan', 'Rambutan', '🍓', 'MERAH', '#ef4444', ['RAM', 'BU', 'TAN']),
-    item('jambu_merah', 'Jambu Merah', '🍎', 'MERAH', '#ef4444', ['JAM', 'BU', 'ME', 'RAH']),
+    item('jambu_merah', 'Jambu Air', '🍎', 'MERAH', '#ef4444', ['JAM', 'BU', 'A', 'IR']),
     item('jambu_biji', 'Jambu Biji', '🍎', 'MERAH', '#ef4444', ['JAM', 'BU', 'BI', 'JI']),
     item('buah_naga', 'Buah Naga', '🍓', 'MERAH', '#ef4444', ['BU', 'AH', 'NA', 'GA']),
     item('leci', 'Leci', '🍒', 'MERAH', '#ef4444', ['LE', 'CI']),
+    item('paprika_merah', 'Paprika Merah', '🌶️', 'MERAH', '#ef4444', ['PA', 'PRI', 'KA']),
+    item('bit_merah', 'Buah Bit', '🍎', 'MERAH', '#ef4444', ['BU', 'AH', 'BIT']),
+    item('kranberi', 'Kranberi', '🍒', 'MERAH', '#ef4444', ['KRAN', 'BE', 'RI']),
+    item('frambos', 'Frambos', '🍓', 'MERAH', '#ef4444', ['FRAM', 'BOS']),
+    item('bayam_merah', 'Bayam Merah', '🥬', 'MERAH', '#ef4444', ['BA', 'YAM', 'ME', 'RAH']),
+    item('kacang_merah', 'Kacang Merah', '🫘', 'MERAH', '#ef4444', ['KA', 'CANG', 'ME', 'RAH']),
 
-    // --- WARNA KUNING (11 Varian Berbeda) ---
+    // --- 2. WARNA KUNING (16 Varian Berbeda) ---
     item('pisang', 'Pisang', '🍌', 'KUNING', '#facc15', ['PI', 'SANG']),
     item('mangga', 'Mangga', '🥭', 'KUNING', '#facc15', ['MANG', 'GA']),
     item('nanas', 'Nanas', '🍍', 'KUNING', '#facc15', ['NA', 'NAS']),
@@ -704,8 +991,13 @@
     item('cempedak', 'Cempedak', '🥭', 'KUNING', '#facc15', ['CEM', 'PE', 'DAK']),
     item('duku', 'Duku', '🍋', 'KUNING', '#facc15', ['DU', 'KU']),
     item('nanas_madu', 'Nanas Madu', '🍍', 'KUNING', '#facc15', ['NA', 'NAS', 'MA', 'DU']),
+    item('langsat', 'Langsat', '🍋', 'KUNING', '#facc15', ['LANG', 'SAT']),
+    item('sukun', 'Sukun', '🍈', 'KUNING', '#facc15', ['SU', 'KUN']),
+    item('kunyit', 'Kunyit', '🫚', 'KUNING', '#facc15', ['KU', 'NYIT']),
+    item('melon_emas', 'Melon Kuning', '🍈', 'KUNING', '#facc15', ['ME', 'LON', 'KU', 'NING']),
+    item('paprika_kuning', 'Paprika Kuning', '🫑', 'KUNING', '#facc15', ['PA', 'PRI', 'KA']),
 
-    // --- WARNA HIJAU (14 Varian Berbeda) ---
+    // --- 3. WARNA HIJAU (22 Varian Berbeda) ---
     item('kelapa', 'Kelapa', '🥥', 'HIJAU', '#22c55e', ['KE', 'LA', 'PA']),
     item('alpukat', 'Alpukat', '🥑', 'HIJAU', '#22c55e', ['AL', 'PU', 'KAT']),
     item('brokoli', 'Brokoli', '🥦', 'HIJAU', '#22c55e', ['BRO', 'KO', 'LI']),
@@ -720,20 +1012,32 @@
     item('kedondong', 'Kedondong', '🍈', 'HIJAU', '#22c55e', ['KE', 'DON', 'DONG']),
     item('srikaya', 'Srikaya', '🍈', 'HIJAU', '#22c55e', ['SRI', 'KA', 'YA']),
     item('pare_hijau', 'Pare Hijau', '🥒', 'HIJAU', '#22c55e', ['PA', 'RE', 'HI', 'JAU']),
+    item('kangkung', 'Kangkung', '🥬', 'HIJAU', '#22c55e', ['KANG', 'KUNG']),
+    item('buncis', 'Buncis', '🫛', 'HIJAU', '#22c55e', ['BUN', 'CIS']),
+    item('petai', 'Petai', '🫛', 'HIJAU', '#22c55e', ['PE', 'TAI']),
+    item('seledri', 'Seledri', '🥬', 'HIJAU', '#22c55e', ['SE', 'LE', 'DRI']),
+    item('jeruk_nipis', 'Jeruk Nipis', '🍋‍🟩', 'HIJAU', '#22c55e', ['JE', 'RUK', 'NI', 'PIS']),
+    item('labu_siam', 'Labu Siam', '🍐', 'HIJAU', '#22c55e', ['LA', 'BU', 'SI', 'AM']),
+    item('daun_bawang', 'Daun Bawang', '🥬', 'HIJAU', '#22c55e', ['DA', 'UN', 'BA', 'WANG']),
+    item('selada', 'Selada', '🥬', 'HIJAU', '#22c55e', ['SE', 'LA', 'DA']),
 
-    // --- WARNA ORANYE (10 Varian Berbeda) ---
+    // --- 4. WARNA ORANYE (14 Varian Berbeda) ---
     item('jeruk', 'Jeruk', '🍊', 'ORANYE', '#f97316', ['JE', 'RUK']),
     item('wortel', 'Wortel', '🥕', 'ORANYE', '#f97316', ['WOR', 'TEL']),
     item('pepaya', 'Pepaya', '🥭', 'ORANYE', '#f97316', ['PE', 'PA', 'YA']),
-    item('labu', 'Labu', '🎃', 'ORANYE', '#f97316', ['LA', 'BU']),
+    item('labu', 'Labu Kuning', '🎃', 'ORANYE', '#f97316', ['LA', 'BU', 'KU', 'NING']),
     item('persik', 'Persik', '🍑', 'ORANYE', '#f97316', ['PER', 'SIK']),
     item('kesemek', 'Kesemek', '🍊', 'ORANYE', '#f97316', ['KE', 'SE', 'MEK']),
     item('markisa', 'Markisa', '🍊', 'ORANYE', '#f97316', ['MAR', 'KI', 'SA']),
     item('aprikot', 'Aprikot', '🍑', 'ORANYE', '#f97316', ['A', 'PRI', 'KOT']),
     item('jeruk_bali', 'Jeruk Keprok', '🍊', 'ORANYE', '#f97316', ['JE', 'RUK', 'KE', 'PROK']),
     item('jeruk_manis', 'Jeruk Manis', '🍊', 'ORANYE', '#f97316', ['JE', 'RUK', 'MA', 'NIS']),
+    item('blewah', 'Blewah', '🍈', 'ORANYE', '#f97316', ['BLE', 'WAH']),
+    item('ubi_madu', 'Ubi Madu', '🍠', 'ORANYE', '#f97316', ['U', 'BI', 'MA', 'DU']),
+    item('cabai_rawit', 'Cabai Rawit', '🌶️', 'ORANYE', '#f97316', ['CA', 'BAI', 'RA', 'WIT']),
+    item('jeruk_ponkan', 'Jeruk Ponkan', '🍊', 'ORANYE', '#f97316', ['JE', 'RUK', 'PON', 'KAN']),
 
-    // --- WARNA UNGU (7 Varian Berbeda) ---
+    // --- 5. WARNA UNGU (12 Varian Berbeda) ---
     item('anggur', 'Anggur', '🍇', 'UNGU', '#a855f7', ['ANG', 'GUR']),
     item('terong', 'Terong', '🍆', 'UNGU', '#a855f7', ['TE', 'RONG']),
     item('manggis', 'Manggis', '🍇', 'UNGU', '#a855f7', ['MANG', 'GIS']),
@@ -741,14 +1045,33 @@
     item('ubi_ungu', 'Ubi Ungu', '🍠', 'UNGU', '#a855f7', ['U', 'BI', 'U', 'NGU']),
     item('ketan_hitam', 'Kol Ungu', '🥬', 'UNGU', '#a855f7', ['KOL', 'U', 'NGU']),
     item('buni', 'Buah Buni', '🫐', 'UNGU', '#a855f7', ['BU', 'AH', 'BU', 'NI']),
+    item('bluberi', 'Bluberi', '🫐', 'UNGU', '#a855f7', ['BLU', 'BE', 'RI']),
+    item('plum_ungu', 'Buah Plum', '🍑', 'UNGU', '#a855f7', ['BU', 'AH', 'PLUM']),
+    item('jamblang', 'Jamblang', '🍇', 'UNGU', '#a855f7', ['JAM', 'BLANG']),
+    item('tin_ungu', 'Buah Tin', '🌰', 'UNGU', '#a855f7', ['BU', 'AH', 'TIN']),
+    item('markisa_ungu', 'Markisa Ungu', '🍇', 'UNGU', '#a855f7', ['MAR', 'KI', 'SA']),
 
-    // --- WARNA COKELAT (6 Varian Berbeda) ---
+    // --- 6. WARNA COKELAT (10 Varian Berbeda) ---
     item('kentang', 'Kentang', '🥔', 'COKELAT', '#b45309', ['KEN', 'TANG']),
     item('kacang_tanah', 'Kacang Tanah', '🥜', 'COKELAT', '#b45309', ['KA', 'CANG', 'TA', 'NAH']),
     item('salak', 'Salak', '🌰', 'COKELAT', '#b45309', ['SA', 'LAK']),
     item('sawo', 'Sawo', '🥔', 'COKELAT', '#b45309', ['SA', 'WO']),
     item('kurma', 'Kurma', '🌰', 'COKELAT', '#b45309', ['KUR', 'MA']),
-    item('bengkuang', 'Bengkuang', '🥔', 'COKELAT', '#b45309', ['BENG', 'KU', 'ANG'])
+    item('bengkuang', 'Bengkuang', '🥔', 'COKELAT', '#b45309', ['BENG', 'KU', 'ANG']),
+    item('singkong', 'Singkong', '🥔', 'COKELAT', '#b45309', ['SING', 'KONG']),
+    item('asam_jawa', 'Asam Jawa', '🥜', 'COKELAT', '#b45309', ['A', 'SAM', 'JA', 'WA']),
+    item('jahe', 'Jahe', '🫚', 'COKELAT', '#b45309', ['JA', 'HE']),
+    item('kelengkeng', 'Kelengkeng', '🥔', 'COKELAT', '#b45309', ['KE', 'LENG', 'KENG']),
+
+    // --- 7. WARNA PUTIH (8 Varian Berbeda) ---
+    item('bawang_putih', 'Bawang Putih', '🧄', 'PUTIH', '#94a3b8', ['BA', 'WANG', 'PU', 'TIH']),
+    item('lobak_putih', 'Lobak Putih', '🥕', 'PUTIH', '#94a3b8', ['LO', 'BAK', 'PU', 'TIH']),
+    item('kembang_kol', 'Kembang Kol', '🥦', 'PUTIH', '#94a3b8', ['KEM', 'BANG', 'KOL']),
+    item('jamur_kancing', 'Jamur Putih', '🍄‍🟫', 'PUTIH', '#94a3b8', ['JA', 'MUR', 'PU', 'TIH']),
+    item('tauge', 'Tauge', '🌱', 'PUTIH', '#94a3b8', ['TA', 'U', 'GE']),
+    item('sawi_putih', 'Sawi Putih', '🥬', 'PUTIH', '#94a3b8', ['SA', 'WI', 'PU', 'TIH']),
+    item('rebung', 'Rebung', '🎋', 'PUTIH', '#94a3b8', ['RE', 'BUNG']),
+    item('pir_putih', 'Buah Pir', '🍐', 'PUTIH', '#94a3b8', ['BU', 'AH', 'PIR'])
   ];
 
   const DISTRACTOR_SYLLABLES = [
@@ -1317,7 +1640,7 @@
         <div class="profile-card-avatar">${renderAvatarHeadSVG(prof.avatar, 58)}</div>
         <div class="profile-card-details">
           <div class="profile-card-name">${prof.name} ${isSelected ? '✅' : ''}</div>
-          <div class="profile-card-stats">⭐ ${prof.stars} Bintang &bull; 📒 ${prof.unlockedStickers.length}/100 Stiker</div>
+          <div class="profile-card-stats">⭐ ${prof.stars} Bintang &bull; 📒 ${prof.unlockedStickers.length}/${STICKER_COLLECTION.length} Stiker</div>
         </div>
         <button type="button" class="clay-btn clay-btn-blue btn-edit-prof" style="min-width: 48px; min-height: 48px; padding: 6px; border-radius: 14px; font-size: 1.1rem;" title="Ubah Profil">
           ✏️
@@ -1775,7 +2098,8 @@
       { name: 'HIJAU', spoken: 'hijau', hex: '#22c55e' },
       { name: 'ORANYE', spoken: 'oranye', hex: '#f97316' },
       { name: 'UNGU', spoken: 'ungu', hex: '#a855f7' },
-      { name: 'COKELAT', spoken: 'cokelat', hex: '#b45309' }
+      { name: 'COKELAT', spoken: 'cokelat', hex: '#b45309' },
+      { name: 'PUTIH', spoken: 'putih', hex: '#94a3b8' }
     ];
     const chosenColor = pickRandom(targetColors);
     const matchingPool = VOCAB_BANK.filter((v) => v.color === chosenColor.name);
@@ -2417,7 +2741,7 @@
       INDONESIAN_NUMBERS[state.unlockedStickers.length] || String(state.unlockedStickers.length);
     const prof = getActiveProfile();
     const childName = prof ? prof.name : 'Teman Kecil';
-    const instruction = `Ini adalah Album seratus Stiker milik ${childName}. Kamu sudah membuka ${countText} stiker. Ketuk stiker yang sudah terbuka untuk mendengarkan suaranya.`;
+    const instruction = `Ini adalah Album Koleksi Stiker milik ${childName}. Kamu sudah membuka ${countText} stiker dari ${STICKER_COLLECTION.length} stiker. Ketuk stiker yang sudah terbuka untuk mendengarkan suaranya.`;
     speakText(instruction, true);
 
     const grid = document.getElementById('albumGrid');
@@ -2602,7 +2926,7 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker
-          .register('./sw.js?v=6')
+          .register('./sw.js?v=7')
           .then((reg) => {
             reg.update();
           })
