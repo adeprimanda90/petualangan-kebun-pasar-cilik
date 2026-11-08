@@ -1,11 +1,11 @@
-const CACHE_NAME = 'kebun-pasar-cilik-v10';
+const CACHE_NAME = 'kebun-pasar-cilik-v11';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './style.css',
-  './style.css?v=10',
+  './style.css?v=11',
   './app.js',
-  './app.js?v=10',
+  './app.js?v=11',
   './manifest.json',
   './icon.svg'
 ];
