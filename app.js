@@ -2897,9 +2897,43 @@
       </div>
     `;
 
+    const MAX_SAME_COIN_USES = 3;
     const formulaText = document.getElementById('paidCoinFormula');
     const resetBtn = document.getElementById('btnResetCoins');
     const coinBtns = stage.querySelectorAll('.coin-btn');
+
+    function getCoinCount(val) {
+      return selectedCoinsList.filter((c) => c === val).length;
+    }
+
+    function updateCoinButtonsState() {
+      coinBtns.forEach((btn) => {
+        const val = Number(btn.dataset.coin);
+        const count = getCoinCount(val);
+        const wouldExceedTotal = currentPaid + val > targetTotal;
+        const reachedLimit = count >= MAX_SAME_COIN_USES;
+
+        btn.disabled = reachedLimit || wouldExceedTotal;
+        btn.classList.toggle('coin-disabled', reachedLimit || wouldExceedTotal);
+
+        let dotsEl = btn.querySelector('.coin-usage-dots');
+        if (!dotsEl) {
+          dotsEl = document.createElement('div');
+          dotsEl.className = 'coin-usage-dots';
+          dotsEl.innerHTML = `
+            <span class="coin-usage-dot dot-1"></span>
+            <span class="coin-usage-dot dot-2"></span>
+            <span class="coin-usage-dot dot-3"></span>
+          `;
+          btn.appendChild(dotsEl);
+        }
+
+        const dots = dotsEl.querySelectorAll('.coin-usage-dot');
+        dots.forEach((dot, idx) => {
+          dot.classList.toggle('used', idx < count);
+        });
+      });
+    }
 
     function updateFormulaDisplay() {
       if (!formulaText) return;
@@ -2910,7 +2944,11 @@
       } else {
         formulaText.textContent = `${selectedCoinsList.join(' + ')} = ${currentPaid}`;
       }
+      updateCoinButtonsState();
     }
+
+    // Inisialisasi tampilan dot limit koin di awal
+    updateCoinButtonsState();
 
     if (resetBtn) {
       resetBtn.addEventListener('click', () => {
@@ -2926,6 +2964,16 @@
       btn.addEventListener('click', () => {
         if (state.isTransitioning) return;
         const val = Number(btn.dataset.coin);
+        const count = getCoinCount(val);
+
+        if (count >= MAX_SAME_COIN_USES) {
+          playGentleBoing();
+          btn.classList.remove('hint-wiggle');
+          void btn.offsetWidth;
+          btn.classList.add('hint-wiggle');
+          speakText(`Koin ${val} sudah ditekan ${MAX_SAME_COIN_USES} kali. Ayo coba gabungkan dengan koin yang lain ya!`, false);
+          return;
+        }
 
         if (currentPaid + val > targetTotal) {
           const remaining = targetTotal - currentPaid;
@@ -3243,7 +3291,7 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker
-          .register('./sw.js?v=11')
+          .register('./sw.js?v=13')
           .then((reg) => {
             reg.update();
           })
